@@ -1,16 +1,21 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-   /* Primary Blue */
-   --primary-blue: #27509b;
-   --primary-blue-dark-03: #3a61a6;
-   --primary-blue-dark-02: #6182bb;
-   --primary-blue-dark-01: #87a4d0;
-   --primary-blue-light-03: #aec5e5;
-   --primary-blue-light-02: #c1d6ef;
-   --primary-blue-light-01: #d4e7fa;
 
-    /* Primary Yellow */
+  /* Fonts */
+  --font-heading: var(--font-michelin, 'Arial Black', Arial, sans-serif);
+  --font-body: var(--font-noto-sans, 'Noto Sans', Arial, sans-serif);
+
+  /* Primary Blue */
+  --primary-blue: #27509b;
+  --primary-blue-dark-03: #3a61a6;
+  --primary-blue-dark-02: #6182bb;
+  --primary-blue-dark-01: #87a4d0;
+  --primary-blue-light-03: #aec5e5;
+  --primary-blue-light-02: #c1d6ef;
+  --primary-blue-light-01: #d4e7fa;
+
+  /* Primary Yellow */
   --primary-yellow: #fce500;
   --primary-yellow-dark-03: #fce817;
   --primary-yellow-dark-02: #fded44;
@@ -23,16 +28,16 @@
   --michelin-dark-blue: #00205b;
   --michelin-midnight-blue: #000c34;
 
-   /* Grays (light) */
-   --white: #ffffff;
-   --gray-light-05: #f2f2f2;
-   --gray-light-10: #e5e5e5;
-   --gray-light-20: #cccccc;
-   --gray-light-30: #b2b2b2;
-   --gray-light-40: #999999;
-   --gray-light-50: #7f7f7f;
+  /* Grays (light) */
+  --white: #ffffff;
+  --gray-light-05: #f2f2f2;
+  --gray-light-10: #e5e5e5;
+  --gray-light-20: #cccccc;
+  --gray-light-30: #b2b2b2;
+  --gray-light-40: #999999;
+  --gray-light-50: #7f7f7f;
 
-    /* Grays (dark) */
+  /* Grays (dark) */
   --black: #000000;
   --gray-dark-90: #0d0d0d;
   --gray-dark-80: #1a1a1a;
@@ -41,16 +46,16 @@
   --gray-dark-50: #4d4d4d;
   --gray-dark-40: #666666;
 
-    /* Semantic colors */
-    --valid: #2e7d32;
-    --valid-dark: #92c18f;
-    --valid-light: #e8f5e5;
-    --warning: #f9a825;
-    --warning-dark: #fcd286;
-    --warning-light: #fdecc0;
-    --danger: #b71c1c;
-    --danger-dark: #dd8880;
-    --danger-light: #f4cec2;
+  /* Semantic colors */
+  --valid: #2e7d32;
+  --valid-dark: #92c18f;
+  --valid-light: #e8f5e5;
+  --warning: #f9a825;
+  --warning-dark: #fcd286;
+  --warning-light: #fdecc0;
+  --danger: #b71c1c;
+  --danger-dark: #dd8880;
+  --danger-light: #f4cec2;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -76,7 +81,7 @@ body {
   flex-direction: column;
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -97,3 +102,39 @@ a {
     color-scheme: dark;
   }
 }
+
+/* ── Typography ───────────────────────────────────────────── */
+
+/* Headings — Michelin Bold (italic) */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-style: italic;
+}
+
+h1 { font-size: 2.25em;  line-height: 3.375em; }
+h2 { font-size: 2em;     line-height: 3em; }
+h3 { font-size: 1.75em;  line-height: 2.65em; }
+h4 { font-size: 1.5em;   line-height: 2.25em; }
+h5 { font-size: 1.375em; line-height: 2.0625em; }
+h6 { font-size: 1.25em;  line-height: 1.875em; }
+
+@media (max-width: 768px) {
+  h1 { font-size: 2em;     line-height: 3em; }
+  h2 { font-size: 1.875em; line-height: 2.8125em; }
+}
+
+/* Body — Noto Sans */
+.body-large      { font-size: 1.125em; line-height: 1.6875em; font-weight: 400; }
+.body-medium     { font-size: 1em;     line-height: 1.5em;    font-weight: 400; }
+.body-small      { font-size: 0.875em; line-height: 1.3125em; font-weight: 400; }
+.body-annotation { font-size: 0.75em;  line-height: 1.125em;  font-weight: 400; }
+
+/* Body Bold */
+.body-large-bold      { font-size: 1.125em; line-height: 1.6875em; font-weight: 700; }
+.body-medium-bold     { font-size: 1em;     line-height: 1.5em;    font-weight: 700; }
+.body-small-bold      { font-size: 0.875em; line-height: 1.3125em; font-weight: 700; }
+.body-annotation-bold { font-size: 0.75em;  line-height: 1.125em;  font-weight: 700; }
+
+/* CTA */
+.cta { font-size: 1.125em; line-height: 1.5em; font-weight: 400; }
