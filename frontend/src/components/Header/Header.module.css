@@ -9,22 +9,38 @@
   justify-content: space-between;
   padding: 0 24px;
   height: 64px;
-  background-color: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: none;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease;
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .scrolled {
   background-color: var(--white);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
   border-bottom-color: var(--gray-light-10);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.btnTransparent {
-  background-color: transparent;
+.accountBtn {
+  padding: 8px 20px;
+  border: 1px solid var(--michelin-dark-blue);
+  border-radius: 24px;
+  background: transparent;
+  color: var(--michelin-dark-blue);
+  font-family: var(--font-body);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.accountBtn:hover {
+  background-color: rgba(0, 32, 91, 0.08);
+}
+
+.accountBtnScrolled {
+  background: var(--white);
+  border-color: var(--gray-light-20);
+}
+
+.accountBtnScrolled:hover {
+  background-color: var(--gray-light-05);
 }
