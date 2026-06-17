@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/Header/Header";
 
@@ -8,6 +9,14 @@ const notoSans = Noto_Sans({
   subsets: ["latin"],
   weight: ["400", "700"],
 });
+
+const michelin = localFont({
+  src: "./fonts/Michelin-Bold.woff2",
+  variable: "--font-michelin",
+  weight: "700",
+  display: "swap",
+});
+
 
 export const metadata: Metadata = {
   title: "Michelin",
@@ -20,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={notoSans.variable}>
+    <html lang="fr" className={`${notoSans.variable} ${michelin.variable}`}>
       <body>
         <Header />
         {children}
