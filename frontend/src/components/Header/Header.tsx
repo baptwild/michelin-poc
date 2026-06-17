@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { Button } from '@/components/Button/Button.tsx';
 import styles from './Header.module.css';
 
 export default function Header() {
@@ -24,9 +25,9 @@ export default function Header() {
         style={{ width: 'auto', height: '40px' }}
         priority
       />
-      <button className={`${styles.accountBtn} ${scrolled ? styles.accountBtnScrolled : ''} cta`}>
+      <Button variant="outline" size="sm" className={!scrolled ? styles.btnTransparent : ''}>
         Mon compte
-      </button>
+      </Button>
     </header>
   );
 }
