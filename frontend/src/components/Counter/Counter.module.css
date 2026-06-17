@@ -1,0 +1,41 @@
+.counter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--michelin-dark-blue);
+  color: var(--white);
+  font-size: 1em;
+  font-weight: 300;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease;
+  line-height: 1;
+}
+
+.btn:hover:not(:disabled) {
+  background-color: var(--primary-blue);
+}
+
+.btn:disabled {
+  background-color: var(--gray-light-20);
+  cursor: not-allowed;
+}
+
+.value {
+  font-family: var(--font-body);
+  font-size: 0.875em;
+  font-weight: 700;
+  color: var(--michelin-dark-blue);
+  min-width: 28px;
+  text-align: center;
+}
