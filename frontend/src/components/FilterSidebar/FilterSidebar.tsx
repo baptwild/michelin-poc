@@ -1,69 +1,87 @@
 'use client';
 
+import { useState } from 'react';
 import Toggle from '@/components/Toggle/Toggle';
 import Counter from '@/components/Counter/Counter';
 import styles from './FilterSidebar.module.css';
 
-const FILTERS = [
-  {
-    title: 'TYPE DE PRATIQUE',
-    options: ['VTT', 'Route', 'Gravel', 'Piste', 'E-Bike'],
-  },
-  {
-    title: 'TYPE DE VÉLO',
-    options: ['Trail', 'Enduro', 'DH', 'Triathlon', 'Course sur route', 'Endurance sur route', 'Course sur piste', 'Ville', 'Touring', 'Cargo', 'Bikepacking'],
-  },
-  {
-    title: 'NIVEAU',
-    options: ['Compétition', 'Entraînement', 'Loisir', 'Débutant'],
-  },
-  {
-    title: 'RESSENTI',
-    options: ['Réactif', 'Équilibré', 'Souple'],
-  },
-  {
-    title: 'TYPE DE SURFACE',
-    options: ['Asphalte lisse', 'Asphalte rugueux', 'Gravel léger', 'Pavés', 'Compact', 'Piste meuble', 'Mixte', 'Boue'],
-  },
-  {
-    title: 'CONDITION DE SURFACE',
-    options: ['Sec', 'Mixte', 'Humide'],
-  },
-];
+export type ToggleFilterSection = {
+  type: 'toggle';
+  title: string;
+  options: string[];
+};
 
-export default function FilterSidebar() {
+export type CounterFilterSection = {
+  type: 'counter';
+  title: string;
+  initialValue: number;
+  min: number;
+  max: number;
+  unit: string;
+};
+
+export type FilterSection = ToggleFilterSection | CounterFilterSection;
+
+type FilterSidebarProps = {
+  title: string;
+  sections: FilterSection[];
+  onClear?: () => void;
+};
+
+function ChevronIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg className={`${styles.chevron} ${className}`} width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+      <path d="M1 7L6 2L11 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export default function FilterSidebar({ title, sections, onClear }: FilterSidebarProps) {
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+
+  const toggleSection = (sectionTitle: string) => {
+    setCollapsed((prev) => ({ ...prev, [sectionTitle]: !prev[sectionTitle] }));
+  };
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.header}>
-        <span className={styles.title}>FILTRES</span>
-        <button className={styles.clearBtn}>Effacer</button>
+        <span className={styles.title}>{title}</span>
+        <button className={styles.clearBtn} onClick={onClear}>Effacer</button>
       </div>
 
-      {FILTERS.map((section) => (
-        <div key={section.title} className={styles.section}>
-          <h4 className={styles.sectionTitle}>{section.title}</h4>
-          <div className={styles.options}>
-            {section.options.map((opt) => (
-              <Toggle key={opt} label={opt} />
-            ))}
+      {sections.map((section) => {
+        const isOpen = !collapsed[section.title];
+        return (
+          <div key={section.title} className={styles.section}>
+            <button
+              type="button"
+              className={styles.sectionTitle}
+              onClick={() => toggleSection(section.title)}
+              aria-expanded={isOpen}
+            >
+              {section.title}
+              <ChevronIcon className={isOpen ? '' : styles.chevronClosed} />
+            </button>
+            {isOpen && (
+              section.type === 'counter' ? (
+                <Counter
+                  initialValue={section.initialValue}
+                  min={section.min}
+                  max={section.max}
+                  unit={section.unit}
+                />
+              ) : (
+                <div className={styles.options}>
+                  {section.options.map((opt) => (
+                    <Toggle key={opt} label={opt} />
+                  ))}
+                </div>
+              )
+            )}
           </div>
-        </div>
-      ))}
-
-      <div className={styles.section}>
-        <h4 className={styles.sectionTitle}>TAILLE DE PNEU</h4>
-        <Counter initialValue={700} min={500} max={1000} unit="mm" />
-      </div>
-
-      <div className={styles.section}>
-        <h4 className={styles.sectionTitle}>DIAMÈTRE DE PNEU</h4>
-        <Counter initialValue={21} min={18} max={60} unit="mm" />
-      </div>
-
-      <div className={styles.section}>
-        <h4 className={styles.sectionTitle}>POIDS DU CYCLISTE</h4>
-        <Counter initialValue={68} min={30} max={150} unit="kg" />
-      </div>
+        );
+      })}
     </aside>
   );
 }

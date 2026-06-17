@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import ProductCard from '@/components/ProductCard/ProductCard';
-import FilterSidebar from '@/components/FilterSidebar/FilterSidebar';
+import FilterSidebar, { FilterSection } from '@/components/FilterSidebar/FilterSidebar';
 import styles from './products.module.css';
 
 interface Tyre {
@@ -13,6 +13,26 @@ interface Tyre {
   grip: number;
   imageUrl?: string;
 }
+
+const FILTER_SECTIONS: FilterSection[] = [
+  { type: 'toggle', title: 'TYPE DE PRATIQUE', options: ['VTT', 'Route', 'Gravel', 'Piste', 'E-Bike'] },
+  {
+    type: 'toggle',
+    title: 'TYPE DE VÉLO',
+    options: ['Trail', 'Enduro', 'DH', 'Triathlon', 'Course sur route', 'Endurance sur route', 'Course sur piste', 'Ville', 'Touring', 'Cargo', 'Bikepacking'],
+  },
+  { type: 'toggle', title: 'NIVEAU', options: ['Compétition', 'Entraînement', 'Loisir', 'Débutant'] },
+  { type: 'toggle', title: 'RESSENTI', options: ['Réactif', 'Équilibré', 'Souple'] },
+  {
+    type: 'toggle',
+    title: 'TYPE DE SURFACE',
+    options: ['Asphalte lisse', 'Asphalte rugueux', 'Gravel léger', 'Pavés', 'Compact', 'Piste meuble', 'Mixte', 'Boue'],
+  },
+  { type: 'toggle', title: 'CONDITION DE SURFACE', options: ['Sec', 'Mixte', 'Humide'] },
+  { type: 'counter', title: 'TAILLE DE PNEU', initialValue: 700, min: 500, max: 1000, unit: 'mm' },
+  { type: 'counter', title: 'DIAMÈTRE DE PNEU', initialValue: 21, min: 18, max: 60, unit: 'mm' },
+  { type: 'counter', title: 'POIDS DU CYCLISTE', initialValue: 68, min: 30, max: 150, unit: 'kg' },
+];
 
 export default function ProductsPage() {
   const [tyres, setTyres] = useState<Tyre[]>([]);
@@ -32,7 +52,7 @@ export default function ProductsPage() {
 
   return (
     <div className={styles.layout}>
-      <FilterSidebar />
+      <FilterSidebar title="FILTRES" sections={FILTER_SECTIONS} />
 
       <main className={styles.main}>
         {loading && <p className={styles.state}>Chargement...</p>}

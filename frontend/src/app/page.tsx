@@ -1,7 +1,12 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 import { Button } from '@/components/Button/Button';
 
 export default function Home() {
+  const router = useRouter();
+
   return (
     <section className={styles.hero}>
       <div className={styles.overlay} />
@@ -13,7 +18,7 @@ export default function Home() {
   trouver !
 </h2>
         <div className={styles.actions}>
-          <Button variant="yellow">Je veux acheter mon pneu</Button>
+          <Button variant="yellow" onClick={() => router.push('/products')}>Je veux acheter mon pneu</Button>
           <Button variant="outline">Je veux de l&apos;aide pour choisir mon pneu</Button>
         </div>
       </div>
