@@ -1,0 +1,39 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 64px;
+}
+
+.main {
+  flex: 1;
+  padding: 24px;
+  background-color: var(--gray-light-05);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.state {
+  color: var(--gray-light-50);
+  font-family: var(--font-body);
+  margin-bottom: 16px;
+}
+
+.error {
+  color: var(--danger);
+  font-family: var(--font-body);
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
