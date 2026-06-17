@@ -1,17 +1,19 @@
 .layout {
   display: flex;
+  align-items: flex-start;
+  gap: 20px;
   min-height: 100vh;
+  padding: 20px;
+  background-color: var(--gray-light-05);
 }
 
 .main {
   flex: 1;
-  padding: 24px;
-  background-color: var(--gray-light-05);
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
 }
 
@@ -30,9 +32,5 @@
 @media (max-width: 768px) {
   .layout {
     flex-direction: column;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
   }
 }
