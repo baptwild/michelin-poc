@@ -122,7 +122,12 @@ export default function ConfigurateurPage() {
 
       {/* Colonne droite — Profil Rider */}
       <div className={styles.sidebar}>
-        <FilterSidebar title="PROFIL RIDER" sections={RIDER_PROFILE_SECTIONS} onToggleChange={handleToggleChange} />
+        <FilterSidebar
+          title="PROFIL RIDER"
+          sections={RIDER_PROFILE_SECTIONS}
+          onToggleChange={handleToggleChange}
+          onClear={() => setSelectedCategories(new Set())}
+        />
       </div>
 
     </div>

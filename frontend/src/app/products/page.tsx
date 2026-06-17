@@ -70,7 +70,12 @@ export default function ProductsPage() {
 
   return (
     <div className={styles.layout}>
-      <FilterSidebar title="FILTRES" sections={FILTER_SECTIONS} onToggleChange={handleToggleChange} />
+      <FilterSidebar
+        title="FILTRES"
+        sections={FILTER_SECTIONS}
+        onToggleChange={handleToggleChange}
+        onClear={() => setSelectedCategories(new Set())}
+      />
 
       <main className={styles.main}>
         {loading && <p className={styles.state}>Chargement...</p>}
