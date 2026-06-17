@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/Button/Button.tsx';
@@ -22,15 +23,17 @@ export default function Header() {
 
   return (
     <header className={`${styles.header} ${isSolid ? styles.scrolled : ''}`}>
-      <Image
-        src={isSolid ? '/images/header/michelin-logo.png' : '/images/header/logo-transparent.png'}
-        alt="Michelin"
-        width={0}
-        height={0}
-        sizes="100vw"
-        style={{ width: 'auto', height: '40px' }}
-        priority
-      />
+      <Link href="/">
+        <Image
+          src={isSolid ? '/images/header/michelin-logo.png' : '/images/header/logo-transparent.png'}
+          alt="Michelin"
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: 'auto', height: '40px' }}
+          priority
+        />
+      </Link>
       <Button variant="outline" size="sm" className={!isSolid ? styles.btnTransparent : ''}>
         Mon compte
       </Button>
