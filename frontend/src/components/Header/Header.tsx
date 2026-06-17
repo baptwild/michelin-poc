@@ -16,7 +16,7 @@ export default function Header() {
   return (
     <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
       <Image
-        src={scrolled ? '/logo-transparent.png' : '/michelin-logo.png'}
+        src={scrolled ? '/images/header/logo-transparent.png' : '/images/header/michelin-logo.png'}
         alt="Michelin"
         width={0}
         height={0}
