@@ -34,6 +34,7 @@ type FilterSidebarProps = {
   onClear?: () => void;
   hideClear?: boolean;
   style?: React.CSSProperties;
+  onToggleChange?: (sectionTitle: string, option: string, checked: boolean) => void;
 };
 
 function ChevronIcon({ className = '' }: { className?: string }) {
@@ -44,7 +45,7 @@ function ChevronIcon({ className = '' }: { className?: string }) {
   );
 }
 
-export default function FilterSidebar({ title, sections, onClear, hideClear = false, style }: FilterSidebarProps) {
+export default function FilterSidebar({ title, sections, onClear, hideClear = false, style, onToggleChange }: FilterSidebarProps) {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
   const toggleSection = (sectionTitle: string) => {
@@ -93,7 +94,11 @@ export default function FilterSidebar({ title, sections, onClear, hideClear = fa
               ) : (
                 <div className={styles.options}>
                   {section.options.map((opt) => (
-                    <Toggle key={opt} label={opt} />
+                    <Toggle
+                      key={opt}
+                      label={opt}
+                      onChange={(checked) => onToggleChange?.(section.title, opt, checked)}
+                    />
                   ))}
                 </div>
               )

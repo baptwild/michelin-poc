@@ -3,19 +3,21 @@
 import { useEffect, useState } from 'react';
 import ProductCard from '@/components/ProductCard/ProductCard';
 import FilterSidebar, { FilterSection } from '@/components/FilterSidebar/FilterSidebar';
+import type { Tyre } from '@/types/tyre';
 import styles from './products.module.css';
 
-interface Tyre {
-  id: number;
-  name: string;
-  category: string;
-  speed: number;
-  grip: number;
-  imageUrl?: string;
-}
+const PRATIQUE_SECTION_TITLE = 'TYPE DE PRATIQUE';
+
+const PRATIQUE_TO_CATEGORY: Record<string, string> = {
+  VTT: 'mtb',
+  Route: 'road',
+  Gravel: 'gravel',
+  Piste: 'piste',
+  'E-Bike': 'ebike',
+};
 
 const FILTER_SECTIONS: FilterSection[] = [
-  { type: 'toggle', title: 'TYPE DE PRATIQUE', options: ['VTT', 'Route', 'Gravel', 'Piste', 'E-Bike'] },
+  { type: 'toggle', title: PRATIQUE_SECTION_TITLE, options: ['VTT', 'Route', 'Gravel', 'Piste', 'E-Bike'] },
   {
     type: 'toggle',
     title: 'TYPE DE VÉLO',
@@ -38,6 +40,7 @@ export default function ProductsPage() {
   const [tyres, setTyres] = useState<Tyre[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/tyres`)
@@ -50,16 +53,31 @@ export default function ProductsPage() {
       .finally(() => setLoading(false));
   }, []);
 
+  const handleToggleChange = (sectionTitle: string, option: string, checked: boolean) => {
+    if (sectionTitle !== PRATIQUE_SECTION_TITLE) return;
+    const category = PRATIQUE_TO_CATEGORY[option];
+    setSelectedCategories((prev) => {
+      const next = new Set(prev);
+      if (checked) next.add(category);
+      else next.delete(category);
+      return next;
+    });
+  };
+
+  const visibleTyres = selectedCategories.size === 0
+    ? tyres
+    : tyres.filter((tyre) => selectedCategories.has(tyre.category));
+
   return (
     <div className={styles.layout}>
-      <FilterSidebar title="FILTRES" sections={FILTER_SECTIONS} />
+      <FilterSidebar title="FILTRES" sections={FILTER_SECTIONS} onToggleChange={handleToggleChange} />
 
       <main className={styles.main}>
         {loading && <p className={styles.state}>Chargement...</p>}
         {error && <p className={styles.error}>Erreur : {error}</p>}
 
         <div className={styles.grid}>
-          {tyres.map((tyre) => (
+          {visibleTyres.map((tyre) => (
             <ProductCard key={tyre.id} tyre={tyre} />
           ))}
         </div>
