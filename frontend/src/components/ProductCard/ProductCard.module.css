@@ -63,6 +63,7 @@
   font-size: 0.8125em;
   color: var(--gray-dark-40);
   line-height: 1.5;
+  margin-bottom: auto;
 }
 
 .divider {
@@ -109,7 +110,6 @@
   font-weight: 400;
   cursor: pointer;
   text-align: center;
-  margin-top: 4px;
   transition: border-color 0.15s ease, color 0.15s ease;
 }
 
