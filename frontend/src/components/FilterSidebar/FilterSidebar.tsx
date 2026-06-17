@@ -20,12 +20,20 @@ export type CounterFilterSection = {
   unit: string;
 };
 
-export type FilterSection = ToggleFilterSection | CounterFilterSection;
+export type ValueFilterSection = {
+  type: 'value';
+  title: string;
+  value: string;
+};
+
+export type FilterSection = ToggleFilterSection | CounterFilterSection | ValueFilterSection;
 
 type FilterSidebarProps = {
   title: string;
   sections: FilterSection[];
   onClear?: () => void;
+  hideClear?: boolean;
+  style?: React.CSSProperties;
 };
 
 function ChevronIcon({ className = '' }: { className?: string }) {
@@ -36,7 +44,7 @@ function ChevronIcon({ className = '' }: { className?: string }) {
   );
 }
 
-export default function FilterSidebar({ title, sections, onClear }: FilterSidebarProps) {
+export default function FilterSidebar({ title, sections, onClear, hideClear = false, style }: FilterSidebarProps) {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
   const toggleSection = (sectionTitle: string) => {
@@ -44,13 +52,24 @@ export default function FilterSidebar({ title, sections, onClear }: FilterSideba
   };
 
   return (
-    <aside className={styles.sidebar}>
+    <aside className={styles.sidebar} style={style}>
       <div className={styles.header}>
         <span className={styles.title}>{title}</span>
-        <button className={styles.clearBtn} onClick={onClear}>Effacer</button>
+        {!hideClear && (
+          <button className={styles.clearBtn} onClick={onClear}>Effacer</button>
+        )}
       </div>
 
       {sections.map((section) => {
+        if (section.type === 'value') {
+          return (
+            <div key={section.title} className={styles.section}>
+              <div className={styles.sectionTitle}>{section.title}</div>
+              <div className={styles.value}>{section.value}</div>
+            </div>
+          );
+        }
+
         const isOpen = !collapsed[section.title];
         return (
           <div key={section.title} className={styles.section}>
