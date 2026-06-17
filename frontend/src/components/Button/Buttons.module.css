@@ -1,0 +1,47 @@
+/* Base commune à tous les boutons */
+.button {
+    font-family: var(--font-body);
+    font-weight: 700;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  
+  /* ── Tailles ── */
+  .sm { font-size: 0.875em; padding: 6px 12px; }
+  .md { font-size: 1em;     padding: 10px 20px; }
+  .lg { font-size: 1.125em; padding: 14px 28px; }
+  
+  /* ── Variant : Jaune ── */
+  .yellow {
+    background-color: var(--primary-yellow);
+    color: var(--black);
+  }
+  .yellow:hover { background-color: var(--primary-yellow-dark-03); }
+  
+  /* ── Variant : Bleu plein (primary) ── */
+  .primary {
+    background-color: var(--primary-blue);
+    color: var(--white);
+  }
+  .primary:hover { background-color: var(--michelin-dark-blue); }
+  
+  /* ── Variant : Contour (outline) ── */
+  .outline {
+    background-color: var(--white);
+    color: var(--primary-blue);
+    border-color: var(--primary-blue);
+  }
+  .outline:hover {
+    background-color: var(--primary-blue);
+    color: var(--white);
+  }
+  
+  /* ── État désactivé (le groupe gris de ta maquette) ── */
+  .button:disabled {
+    background-color: var(--gray-light-10);
+    color: var(--gray-light-30);
+    border-color: transparent;
+    cursor: not-allowed;
+  }
