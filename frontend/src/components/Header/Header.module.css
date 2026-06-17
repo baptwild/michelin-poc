@@ -1,4 +1,9 @@
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -6,6 +11,12 @@
   height: 64px;
   background-color: var(--white);
   border-bottom: 1px solid var(--gray-light-10);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.scrolled {
+  background-color: transparent;
+  border-bottom-color: transparent;
 }
 
 .accountBtn {
@@ -17,8 +28,19 @@
   font-family: var(--font-body);
   cursor: pointer;
   white-space: nowrap;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .accountBtn:hover {
   background-color: var(--gray-light-05);
+}
+
+.accountBtnScrolled {
+  background: transparent;
+  border-color: var(--white);
+  color: var(--white);
+}
+
+.accountBtnScrolled:hover {
+  background-color: rgba(255, 255, 255, 0.15);
 }
