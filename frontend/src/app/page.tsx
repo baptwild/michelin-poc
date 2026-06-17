@@ -1,35 +1,22 @@
-'use client';
-
-import { useEffect, useState } from 'react';
+import styles from './page.module.css';
+import { Button } from '@/components/Button/Button';
 
 export default function Home() {
-  const [tyres, setTyres] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/tyres`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then((data) => setTyres(data))
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, []);
-
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Michelin Tyres</h1>
-
-      {loading && <p>Chargement...</p>}
-      {error && <p style={{ color: 'red' }}>Erreur : {error}</p>}
-
-      {tyres.map((t) => (
-        <div key={t.id} style={{ marginBottom: 10 }}>
-          <b>{t.name}</b> — {t.category}
+    <section className={styles.hero}>
+      <div className={styles.overlay} />
+      <div className={styles.content}>
+      <h2 className={styles.title}>
+  Nous avons le pneu idéal<br />
+  pour votre usage<br />
+  et nous vous aidons à le<br />
+  trouver !
+</h2>
+        <div className={styles.actions}>
+          <Button variant="yellow">Je veux acheter mon pneu</Button>
+          <Button variant="outline">Je veux de l&apos;aide pour choisir mon pneu</Button>
         </div>
-      ))}
-    </div>
+      </div>
+    </section>
   );
 }

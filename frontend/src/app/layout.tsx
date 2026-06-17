@@ -13,7 +13,6 @@ const notoSans = Noto_Sans({
 const michelin = localFont({
   src: "./fonts/Michelin-Bold.woff2",
   variable: "--font-michelin",
-  weight: "700",
   display: "swap",
 });
 
