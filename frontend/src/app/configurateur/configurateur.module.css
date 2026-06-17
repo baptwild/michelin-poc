@@ -1,51 +1,48 @@
 .layout {
   display: flex;
-  gap: 32px;
-  padding: 24px;
+  justify-content: center;
+  gap: 24px;
+  padding: 20px;
   align-items: flex-start;
+  background-color: var(--gray-light-05);
 }
 
 .left {
   flex: 1;
+  min-width: 0;
+  max-width: 760px;
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
+.tiresSection {
+  border: 1px solid var(--gray-light-10);
+  border-radius: 12px;
+  background: var(--white);
+  padding: 20px;
+}
+
 .tiresSection h2 {
-  margin-bottom: 16px;
+  font-size: 1.5em;
+  line-height: 1.3;
+  margin-bottom: 12px;
 }
 
 .tiresGrid {
   display: flex;
-  gap: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.configRow {
+  display: flex;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
 .sidebar {
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  flex-shrink: 0;
   position: sticky;
   top: 80px;
-}
-
-.sidebarHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.filterGroup {
-  background-color: var(--primary-blue-light-01);
-  border-radius: 12px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.filterGroup h4 {
-  color: var(--primary-blue);
 }

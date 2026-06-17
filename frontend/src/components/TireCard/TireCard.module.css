@@ -2,67 +2,72 @@
 .card {
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 20px;
-    border-radius: 16px;
-    background-color: #f0f0f0;
-    border: 2px solid transparent;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 12px;
+    background-color: var(--white);
+    border: 2px solid var(--gray-light-10);
     cursor: pointer;
-    width: 380px;
+    flex: 1 1 280px;
     transition: border-color 0.2s, background-color 0.2s;
   }
-  
+
   .selected {
-    background-color: #e8f0fe;
-    border-color: #3b82f6;
+    background-color: var(--primary-blue-light-01);
+    border-color: var(--primary-blue);
   }
   
   .image {
-    width: 80px;
+    width: 56px;
     height: auto;
     object-fit: contain;
   }
-  
+
   .content {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
   }
-  
+
   .name {
+    font-family: var(--font-heading);
     font-style: italic;
-    font-weight: 800;
-    font-size: 18px;
-    margin: 0;
-    color: #111;
-  }
-  
-  .size {
-    font-size: 14px;
-    color: #555;
-    margin: 0;
-  }
-  
-  .match {
-    font-size: 15px;
     font-weight: 700;
-    color: #1a3a8f;
-    margin: 4px 0;
+    font-size: 1em;
+    margin: 0;
+    color: var(--michelin-dark-blue);
+    text-transform: uppercase;
   }
-  
+
+  .size {
+    font-family: var(--font-body);
+    font-size: 0.75em;
+    color: var(--gray-dark-40);
+    margin: 0;
+  }
+
+  .match {
+    font-family: var(--font-body);
+    font-size: 0.8125em;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin: 2px 0;
+  }
+
   .features {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 1px;
   }
-  
+
   .features li {
-    font-size: 13px;
+    font-family: var(--font-body);
+    font-size: 0.6875em;
     font-weight: 600;
-    color: #2e7d32;
+    color: var(--valid);
   }
   
   .features li::before {

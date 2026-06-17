@@ -9,7 +9,7 @@ export const BikeCard = () => {
         alt="Vélo"
         width={600}
         height={400}
-        style={{ width: '100%', height: 'auto', objectFit: 'contain' }}
+        style={{ width: 'auto', height: '100%', maxWidth: '100%', objectFit: 'contain' }}
         priority
       />
     </div>

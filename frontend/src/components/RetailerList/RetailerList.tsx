@@ -24,8 +24,8 @@ export const RetailerList = ({ retailers }: RetailerListProps) => {
             <Image
               src={retailer.logoUrl}
               alt={retailer.name}
-              width={120}
-              height={40}
+              width={90}
+              height={30}
               style={{ objectFit: 'contain' }}
             />
             <span className={styles.stock}>
