@@ -103,6 +103,7 @@
 /* Carousel */
 .carousel {
   display: flex;
+  justify-content: center;
   gap: 24px;
   overflow-x: auto;
   padding-bottom: 8px;
@@ -121,19 +122,39 @@
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 12, 52, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.carouselCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 28px rgba(0, 12, 52, 0.22);
 }
 
 .carouselImage {
   object-fit: cover;
   border-radius: 16px;
+  transition: transform 0.4s ease;
+}
+
+.carouselCard:hover .carouselImage {
+  transform: scale(1.07);
+}
+
+.carouselScrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 12, 52, 0) 45%, rgba(0, 12, 52, 0.85) 100%);
+  pointer-events: none;
 }
 
 .carouselLabel {
   position: absolute;
   top: 20px;
   left: 20px;
+  right: 20px;
   color: var(--white);
-  font-size: 1.5rem;
+  font-size: 1.375rem;
   font-weight: 800;
   font-style: italic;
   text-transform: uppercase;
@@ -141,7 +162,55 @@
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
+.carouselLabelGroup {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.carouselLabelGroup .carouselLabel {
+  position: static;
+}
+
+.carouselSubLabel {
+  color: var(--primary-yellow);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.trustedSection {
+  text-align: center;
+}
+
+.trustedSection .whyText {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.carouselCardWide {
+  flex: 0 0 calc(45% - 12px);
+  aspect-ratio: 1 / 1;
+}
+
+@media (max-width: 768px) {
+  .carouselCardWide { flex: 0 0 75vw; }
+}
+
+/* Try before you choose section */
+.tryBeforeSection {
+  padding: 64px 80px;
+  background: var(--primary-blue-light-01);
+}
+
 @media (max-width: 768px) {
   .whySection { padding: 40px 24px; }
+  .tryBeforeSection { padding: 40px 24px; }
   .carouselCard { flex: 0 0 75vw; }
 }
