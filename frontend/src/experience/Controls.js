@@ -1,8 +1,9 @@
 import * as THREE from 'three'
 import GSAP from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger.js'
-import ASScroll from '@ashthornton/asscroll'
 import Experience from './Experience.js'
+
+let ASScroll = null
 
 export default class Controls {
   constructor() {
@@ -35,6 +36,16 @@ export default class Controls {
       console.warn('[Controls] ASScroll container ([asscroll]) not found — skipping smooth scroll')
       return null
     }
+    
+    if (!ASScroll) {
+      try {
+        ASScroll = require('@ashthornton/asscroll').default
+      } catch (e) {
+        console.warn('[Controls] Could not load ASScroll:', e.message)
+        return null
+      }
+    }
+    
     const asscroll = new ASScroll({
       disableRaf: true
     })
