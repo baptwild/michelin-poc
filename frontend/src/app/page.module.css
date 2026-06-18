@@ -1,7 +1,7 @@
 .hero {
   position: relative;
   margin-top: -64px;
-  min-height: 100vh;
+  min-height: 90vh;
   display: flex;
   align-items: center;
   background-image: url("/images/home-image.png");
@@ -39,4 +39,109 @@
 
 @media (max-width: 600px) {
   .content { padding: 0 24px; }
+}
+
+/* Simulator section */
+.simulatorSection {
+  padding: 64px 80px;
+  background: var(--michelin-dark-blue);
+}
+
+.simulatorTitle {
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-style: italic;
+  color: var(--white);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.simulatorText {
+  font-size: 0.95rem;
+  color: var(--white);
+  line-height: 1.6;
+  max-width: 700px;
+  margin-bottom: 28px;
+  opacity: 0.9;
+}
+
+.simulatorActions {
+  margin-bottom: 36px;
+}
+
+@media (max-width: 768px) {
+  .simulatorSection { padding: 40px 24px; }
+}
+
+/* Why Michelin section */
+.whySection {
+  padding: 64px 80px;
+  background: var(--white);
+}
+
+.whyTitle {
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-style: italic;
+  color: var(--michelin-dark-blue);
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.whyText {
+  font-size: 0.95rem;
+  color: var(--text-dark, #1a1a1a);
+  line-height: 1.7;
+  max-width: 860px;
+  margin-bottom: 28px;
+}
+
+.whyActions {
+  margin-bottom: 40px;
+}
+
+/* Carousel */
+.carousel {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: none;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.carouselCard {
+  position: relative;
+  flex: 0 0 calc(33.333% - 16px);
+  min-width: 260px;
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.carouselImage {
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+.carouselLabel {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: var(--white);
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 768px) {
+  .whySection { padding: 40px 24px; }
+  .carouselCard { flex: 0 0 75vw; }
 }
