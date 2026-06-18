@@ -41,9 +41,15 @@ export default function Home() {
           <div className={styles.actions}>
             <Button
               variant='yellow'
-              onClick={() => router.push('/configurateur')}
+              onClick={() => router.push('/experience')}
             >
               Lancer le simulateur
+            </Button>
+            <Button
+              variant='outline'
+              onClick={() => router.push('/configurateur')}
+            >
+              Configuration simple
             </Button>
             <Button variant='outline' onClick={() => router.push('/products')}>
               Explorer la gamme Michelin
@@ -94,9 +100,15 @@ export default function Home() {
         <div className={styles.simulatorActions}>
           <Button
             variant='yellow'
-            onClick={() => router.push('/configurateur')}
+            onClick={() => router.push('/experience')}
           >
             Lancer le simulateur
+          </Button>
+          <Button
+            variant='outline'
+            onClick={() => router.push('/configurateur')}
+          >
+            Configuration simple
           </Button>
         </div>
         <BikeCard />

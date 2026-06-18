@@ -23,6 +23,7 @@ export default function ExperiencePage() {
   const pageWrapperRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const togglePanel = useStore((s) => s.togglePanel)
+  const openPanel = useStore((s) => s.openPanel)
   const openPanelWithQuiz = useStore((s) => s.openPanelWithQuiz)
   const setPatterns = useStore((s) => s.setPatterns)
   const setColors = useStore((s) => s.setColors)
@@ -70,7 +71,7 @@ export default function ExperiencePage() {
                 </p>
 
                 <div className="experience-actions">
-                  <Button variant="yellow" onClick={() => router.push('/configurateur')}>
+                  <Button variant="yellow" onClick={openPanel}>
                     Configurer mes pneus
                   </Button>
                   <Button variant="outline" onClick={() => router.push('/products')}>

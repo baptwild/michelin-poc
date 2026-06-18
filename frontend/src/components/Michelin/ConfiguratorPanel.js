@@ -34,6 +34,12 @@ export default function ConfiguratorPanel() {
     }
   }, [panelOpen, panelStartQuiz, consumePanelStartQuiz])
 
+  useEffect(() => {
+    if (!panelOpen) {
+      setQuizActive(false)
+    }
+  }, [panelOpen])
+
   function handleQuizComplete() {
     setQuizActive(false)
     setTimeout(() => {

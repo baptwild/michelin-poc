@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { Button } from '@/components/Button/Button.tsx'
+import { Button } from '@/components/Button/Button'
 import styles from './Header.module.css'
 
 export default function Header() {

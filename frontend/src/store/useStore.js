@@ -23,8 +23,8 @@ export const useStore = create((set) => ({
   rider: { ...defaultRider },
 
   togglePanel: () => set((s) => ({ panelOpen: !s.panelOpen })),
-  openPanel: () => set({ panelOpen: true }),
-  closePanel: () => set({ panelOpen: false }),
+  openPanel: () => set({ panelOpen: true, panelStartQuiz: false }),
+  closePanel: () => set({ panelOpen: false, panelStartQuiz: false }),
   openPanelWithQuiz: () => set({ panelOpen: true, panelStartQuiz: true }),
   consumePanelStartQuiz: () => set({ panelStartQuiz: false }),
 

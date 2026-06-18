@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import "./michelin-poc.css";
 import Header from "@/components/Header/Header";
 
 const notoSans = Noto_Sans({
