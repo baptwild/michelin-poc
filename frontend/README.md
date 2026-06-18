@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Michelin Performance Hub - Frontend
 
-## Getting Started
+Ce répertoire contient la couche d'interface du projet, développée avec le framework Next.js.
 
-First, run the development server:
+## Spécifications Techniques
+
+- **Framework :** Next.js
+- **Port d'écoute :** 3000
+- **URL locale :** http://localhost:3000
+
+## Configuration
+
+L'application consomme l'API backend via la variable d'environnement suivante, à définir dans un fichier `.env.local` à créer ici, à la base du dossier [`/frontend`](/frontend/) :
+
+```bash
+NEXT_PUBLIC_API_URL : http://localhost:3001
+```
+
+## Développement Local (Hors Docker)
+
+Si vous devez exécuter le frontend indépendamment du conteneur global, suivez ces étapes :
+
+### 1. Installez les dépendances :
+
+```bash
+npm install
+```
+
+### 2. Lancez le serveur de développement :
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Accès à l'application :
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+L'application est désormais disponible à l'URL : http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**À noter :**
+Lancer uniquement le code du frontend risque de faire remonter des erreurs si le backend n'est pas lancé aussi en parralèle (erreurs de connexion à l'API).
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Note sur le Rechargement à Chaud**
+L'environnement intègre la variable `CHOKIDAR_USEPOLLING=true` pour garantir la détection des modifications de fichiers et le rafraîchissement automatique de l'interface sur les postes de travail configurés sous Windows et non-accessibles à l'environnement Docker (qui tourne sur l'environnement Linux via WSL).
