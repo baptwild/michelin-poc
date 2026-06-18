@@ -1,20 +1,12 @@
 import Image from 'next/image';
 import Badge from '@/components/Badge/Badge';
+import type { Tyre } from '@/types/tyre';
 import styles from './ProductCard.module.css';
 
 interface Retailer {
   name: string;
   logo: string;
   available: boolean;
-}
-
-interface Tyre {
-  id: number;
-  name: string;
-  category: string;
-  speed: number;
-  grip: number;
-  imageUrl?: string;
 }
 
 const RETAILERS: Retailer[] = [

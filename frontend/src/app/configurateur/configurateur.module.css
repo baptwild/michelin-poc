@@ -35,6 +35,18 @@
   flex-wrap: wrap;
 }
 
+.state {
+  color: var(--gray-light-50);
+  font-family: var(--font-body);
+  margin-bottom: 12px;
+}
+
+.error {
+  color: var(--danger);
+  font-family: var(--font-body);
+  margin-bottom: 12px;
+}
+
 .configRow {
   display: flex;
   gap: 20px;

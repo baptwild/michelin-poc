@@ -1,16 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BikeCard } from '@/components/Bike/BikeCard';
 import { TireCard } from '@/components/TireCard/TireCard';
 import { RetailerList } from '@/components/RetailerList/RetailerList';
 import FilterSidebar, { FilterSection } from '@/components/FilterSidebar/FilterSidebar';
+import type { Tyre } from '@/types/tyre';
 import styles from './configurateur.module.css';
-
-const TIRES = [
-  { id: 'pro5-tlr-1', name: 'PRO5 TLR', size: '700 mm', matchScore: 98, features: ['Endurance', 'Compétition', 'Longues distances'], imageUrl: '/images/products/pneu.png' },
-  { id: 'pro5-tlr-2', name: 'PRO5 TLR', size: '700 mm', matchScore: 98, features: ['Endurance', 'Compétition', 'Longues distances'], imageUrl: '/images/products/pneu.png' },
-];
 
 const TIRE_CONFIG_SECTIONS: FilterSection[] = [
   { type: 'counter', title: 'TAILLE', initialValue: 700, min: 500, max: 1000, unit: 'mm' },
@@ -21,6 +17,15 @@ const PRESSURE_SECTIONS: FilterSection[] = [
   { type: 'value', title: 'PNEU AVANT', value: '4.46 BAR' },
   { type: 'value', title: 'PNEU ARRIÈRE', value: '4.68 BAR' },
 ];
+
+const PRATIQUE_SECTION_TITLE = 'PRATIQUE';
+
+const PRATIQUE_TO_CATEGORY: Record<string, string> = {
+  VTT: 'mtb',
+  Gravel: 'gravel',
+  Piste: 'piste',
+  'E-Bike': 'ebike',
+};
 
 const RIDER_PROFILE_SECTIONS: FilterSection[] = [
   { type: 'counter', title: 'POIDS', initialValue: 68, min: 30, max: 200, unit: 'kg' },
@@ -41,7 +46,40 @@ const RIDER_PROFILE_SECTIONS: FilterSection[] = [
 ];
 
 export default function ConfigurateurPage() {
-  const [selectedTireId, setSelectedTireId] = useState(TIRES[0].id);
+  const [tyres, setTyres] = useState<Tyre[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedTyreId, setSelectedTyreId] = useState<number | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/tyres`)
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((data: Tyre[]) => {
+        setTyres(data);
+        setSelectedTyreId(data[0]?.id ?? null);
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleToggleChange = (sectionTitle: string, option: string, checked: boolean) => {
+    if (sectionTitle !== PRATIQUE_SECTION_TITLE) return;
+    const category = PRATIQUE_TO_CATEGORY[option];
+    setSelectedCategories((prev) => {
+      const next = new Set(prev);
+      if (checked) next.add(category);
+      else next.delete(category);
+      return next;
+    });
+  };
+
+  const visibleTyres = selectedCategories.size === 0
+    ? tyres
+    : tyres.filter((tyre) => selectedCategories.has(tyre.category));
 
   return (
     <div className={styles.layout}>
@@ -52,17 +90,18 @@ export default function ConfigurateurPage() {
 
         <section className={styles.tiresSection}>
           <h2>VOS PNEUS IDÉAUX</h2>
+          {loading && <p className={styles.state}>Chargement...</p>}
+          {error && <p className={styles.error}>Erreur : {error}</p>}
           <div className={styles.tiresGrid}>
-            {TIRES.map((tire) => (
+            {visibleTyres.map((tyre) => (
               <TireCard
-                key={tire.id}
-                name={tire.name}
-                size={tire.size}
-                matchScore={tire.matchScore}
-                features={tire.features}
-                imageUrl={tire.imageUrl}
-                selected={selectedTireId === tire.id}
-                onClick={() => setSelectedTireId(tire.id)}
+                key={tyre.id}
+                name={tyre.name}
+                matchScore={tyre.grip}
+                features={[tyre.category.toUpperCase(), `${tyre.speed} km/h`]}
+                imageUrl={tyre.imageUrl || '/images/products/pneu.png'}
+                selected={selectedTyreId === tyre.id}
+                onClick={() => setSelectedTyreId(tyre.id)}
               />
             ))}
           </div>
@@ -83,7 +122,12 @@ export default function ConfigurateurPage() {
 
       {/* Colonne droite — Profil Rider */}
       <div className={styles.sidebar}>
-        <FilterSidebar title="PROFIL RIDER" sections={RIDER_PROFILE_SECTIONS} />
+        <FilterSidebar
+          title="PROFIL RIDER"
+          sections={RIDER_PROFILE_SECTIONS}
+          onToggleChange={handleToggleChange}
+          onClear={() => setSelectedCategories(new Set())}
+        />
       </div>
 
     </div>

@@ -26,7 +26,10 @@ export type ValueFilterSection = {
   value: string;
 };
 
-export type FilterSection = ToggleFilterSection | CounterFilterSection | ValueFilterSection;
+export type FilterSection =
+  | ToggleFilterSection
+  | CounterFilterSection
+  | ValueFilterSection;
 
 type FilterSidebarProps = {
   title: string;
@@ -34,21 +37,52 @@ type FilterSidebarProps = {
   onClear?: () => void;
   hideClear?: boolean;
   style?: React.CSSProperties;
+  onToggleChange?: (
+    sectionTitle: string,
+    option: string,
+    checked: boolean,
+  ) => void;
 };
 
 function ChevronIcon({ className = '' }: { className?: string }) {
   return (
-    <svg className={`${styles.chevron} ${className}`} width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
-      <path d="M1 7L6 2L11 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <svg
+      className={`${styles.chevron} ${className}`}
+      width="12"
+      height="8"
+      viewBox="0 0 12 8"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M1 7L6 2L11 7"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
 
-export default function FilterSidebar({ title, sections, onClear, hideClear = false, style }: FilterSidebarProps) {
+export default function FilterSidebar({
+  title,
+  sections,
+  onClear,
+  hideClear = false,
+  style,
+  onToggleChange,
+}: FilterSidebarProps) {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [resetKey, setResetKey] = useState(0);
 
   const toggleSection = (sectionTitle: string) => {
     setCollapsed((prev) => ({ ...prev, [sectionTitle]: !prev[sectionTitle] }));
+  };
+
+  const handleClear = () => {
+    setResetKey((k) => k + 1);
+    onClear?.();
   };
 
   return (
@@ -56,7 +90,9 @@ export default function FilterSidebar({ title, sections, onClear, hideClear = fa
       <div className={styles.header}>
         <span className={styles.title}>{title}</span>
         {!hideClear && (
-          <button className={styles.clearBtn} onClick={onClear}>Effacer</button>
+          <button className={styles.clearBtn} onClick={handleClear}>
+            Effacer
+          </button>
         )}
       </div>
 
@@ -82,9 +118,10 @@ export default function FilterSidebar({ title, sections, onClear, hideClear = fa
               {section.title}
               <ChevronIcon className={isOpen ? '' : styles.chevronClosed} />
             </button>
-            {isOpen && (
-              section.type === 'counter' ? (
+            {isOpen &&
+              (section.type === 'counter' ? (
                 <Counter
+                  key={resetKey}
                   initialValue={section.initialValue}
                   min={section.min}
                   max={section.max}
@@ -93,11 +130,14 @@ export default function FilterSidebar({ title, sections, onClear, hideClear = fa
               ) : (
                 <div className={styles.options}>
                   {section.options.map((opt) => (
-                    <Toggle key={opt} label={opt} />
+                    <Toggle
+                      key={`${resetKey}-${opt}`}
+                      label={opt}
+                      onChange={(checked) => onToggleChange?.(section.title, opt, checked)}
+                    />
                   ))}
                 </div>
-              )
-            )}
+              ))}
           </div>
         );
       })}
