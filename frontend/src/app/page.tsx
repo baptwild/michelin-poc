@@ -8,6 +8,16 @@ import { BikeCard } from '@/components/Bike/BikeCard';
 
 const CATEGORIES = ['COURSE', 'GRAVEL', 'VTT'];
 
+const TRUSTED_BY = ['IRONMAN', 'RACE ACCROSS SERIES'];
+
+const TRY_RIDES = [
+  { title: 'COURSE', subtitle: 'SORTIE PERFORMANCE' },
+  { title: 'GRAVEL', subtitle: 'SORTIE DÉCOUVERTE' },
+  { title: 'VTT', subtitle: 'SORTIE TECHNIQUE' },
+];
+
+const RECOMMENDED_BY = ['MAGASINS PARTENAIRES', 'MONTEURS & RÉPARATEURS', 'CLUBS CYCLISTES'];
+
 export default function Home() {
   const router = useRouter();
 
@@ -23,8 +33,8 @@ export default function Home() {
             et nous vous aidons à le trouver !
           </h2>
           <div className={styles.actions}>
-            <Button variant="yellow" onClick={() => router.push('/products')}>Je veux acheter mon pneu</Button>
-            <Button variant="outline" onClick={() => router.push('/configurateur')}>Je veux de l&apos;aide pour choisir mon pneu</Button>
+            <Button variant="yellow" onClick={() => router.push('/configurateur')}>Lancer le simulateur</Button>
+            <Button variant="outline" onClick={() => router.push('/products')}>Explorer la gamme Michelin</Button>
           </div>
         </div>
       </section>
@@ -48,8 +58,10 @@ export default function Home() {
                 src="/images/quality-card.png"
                 alt={cat}
                 fill
+                sizes="(max-width: 768px) 75vw, 33vw"
                 className={styles.carouselImage}
               />
+              <div className={styles.carouselScrim} />
               <span className={styles.carouselLabel}>{cat}</span>
             </div>
           ))}
@@ -66,6 +78,85 @@ export default function Home() {
           <Button variant="yellow" onClick={() => router.push('/configurateur')}>Lancer le simulateur</Button>
         </div>
         <BikeCard />
+      </section>
+
+
+      <section className={`${styles.whySection} ${styles.trustedSection}`}>
+        <h2 className={styles.whyTitle}>Validé par les cyclistes les plus exigeants</h2>
+        <p className={styles.whyText}>
+          Les athlètes les plus grands recherchent chaque avantage, et Michelin les accompagne dans leur quête de performance.
+        </p>
+        <div className={styles.carousel}>
+          {TRUSTED_BY.map((label) => (
+            <div key={label} className={`${styles.carouselCard} ${styles.carouselCardWide}`}>
+              <Image
+                src="/images/quality-card.png"
+                alt={label}
+                fill
+                sizes="(max-width: 768px) 75vw, 33vw"
+                className={styles.carouselImage}
+              />
+              <div className={styles.carouselScrim} />
+              <span className={styles.carouselLabel}>{label}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+
+      <section className={styles.tryBeforeSection}>
+        <h2 className={styles.whyTitle}>Essayez avant de choisir</h2>
+        <p className={styles.whyText}>
+          Vivez la différence Michelin sur le terrain grâce à nos événements communautaires, et testez nos produits
+          directement lors des Michelin Ride Sessions.
+        </p>
+        <div className={styles.whyActions}>
+          <Button variant="yellow">Je m&apos;inscris</Button>
+        </div>
+        <div className={styles.carousel}>
+          {TRY_RIDES.map((ride) => (
+            <div key={ride.title} className={styles.carouselCard}>
+              <Image
+                src="/images/quality-card.png"
+                alt={ride.title}
+                fill
+                sizes="(max-width: 768px) 75vw, 33vw"
+                className={styles.carouselImage}
+              />
+              <div className={styles.carouselScrim} />
+              <span className={styles.carouselLabelGroup}>
+                <span className={styles.carouselLabel}>{ride.title}</span>
+                <span className={styles.carouselSubLabel}>{ride.subtitle}</span>
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+
+      <section className={styles.whySection}>
+        <h2 className={styles.whyTitle}>Recommandé par les spécialistes</h2>
+        <p className={styles.whyText}>
+          Michelin s&apos;appuie sur un réseau d&apos;experts reconnus pour accompagner les cyclistes dans leurs choix.
+        </p>
+        <div className={styles.whyActions}>
+          <Button variant="yellow">Découvrir la liste des revendeurs Michelin</Button>
+        </div>
+        <div className={styles.carousel}>
+          {RECOMMENDED_BY.map((label) => (
+            <div key={label} className={styles.carouselCard}>
+              <Image
+                src="/images/quality-card.png"
+                alt={label}
+                fill
+                sizes="(max-width: 768px) 75vw, 33vw"
+                className={styles.carouselImage}
+              />
+              <div className={styles.carouselScrim} />
+              <span className={styles.carouselLabel}>{label}</span>
+            </div>
+          ))}
+        </div>
       </section>
     </>
   );
