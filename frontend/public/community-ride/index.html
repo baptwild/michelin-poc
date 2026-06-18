@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MICHELIN COMMUNITY RIDE — Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ====== CHARTE GRAPHIQUE MICHELIN (tokens fournis) ====== */
+  :root {
+    --background: #ffffff;
+    --foreground: #171717;
+    --font-heading: var(--font-michelin, 'Arial Black', Arial, sans-serif);
+    --font-body: var(--font-noto-sans, 'Noto Sans', Arial, sans-serif);
+    --primary-blue: #27509b;
+    --primary-blue-dark-03: #3a61a6;
+    --primary-blue-dark-02: #6182bb;
+    --primary-blue-dark-01: #87a4d0;
+    --primary-blue-light-03: #aec5e5;
+    --primary-blue-light-02: #c1d6ef;
+    --primary-blue-light-01: #d4e7fa;
+    --primary-yellow: #fce500;
+    --primary-yellow-dark-03: #fce817;
+    --primary-yellow-dark-02: #fded44;
+    --primary-yellow-dark-01: #fdf271;
+    --primary-yellow-light-03: #fef984;
+    --primary-yellow-light-02: #fef79e;
+    --primary-yellow-light-01: #fefccb;
+    --michelin-dark-blue: #00205b;
+    --michelin-midnight-blue: #000c34;
+    --white: #ffffff;
+    --gray-light-05: #f2f2f2;
+    --gray-light-10: #e5e5e5;
+    --gray-light-20: #cccccc;
+    --gray-light-30: #b2b2b2;
+    --gray-light-40: #999999;
+    --gray-light-50: #7f7f7f;
+    --black: #000000;
+    --gray-dark-90: #0d0d0d;
+    --gray-dark-80: #1a1a1a;
+    --gray-dark-70: #333333;
+    --gray-dark-60: #404040;
+    --gray-dark-50: #4d4d4d;
+    --gray-dark-40: #666666;
+    --valid: #2e7d32;
+    --valid-dark: #92c18f;
+    --valid-light: #e8f5e5;
+    --warning: #f9a825;
+    --warning-dark: #fcd286;
+    --warning-light: #fdecc0;
+    --danger: #b71c1c;
+    --danger-dark: #dd8880;
+    --danger-light: #f4cec2;
+    --radius-lg:20px; --radius-md:14px; --radius-sm:10px;
+  }
+
+  * { box-sizing:border-box; padding:0; margin:0; -webkit-tap-highlight-color:transparent; }
+  html,body{ max-width:100vw; overflow-x:hidden; }
+  a{ color:inherit; text-decoration:none; }
+
+  h1,h2,h3,h4,h5,h6{ font-family:var(--font-heading); font-style:italic; color:var(--foreground); }
+  h1{ font-size:2.25em; line-height:2; }
+  h2{ font-size:2em; line-height:3em; }
+  h3{ font-size:1.75em; line-height:2.65em; }
+  h4{ font-size:1.5em; line-height:2.25em; }
+  h5{ font-size:1.375em; line-height:2.0625em; }
+  h6{ font-size:1.25em; line-height:1.875em; }
+  @media (max-width:768px){
+    h1{ font-size:2em; line-height:3em; }
+    h2{ font-size:1.875em; line-height:2.8125em; }
+  }
+
+  body{
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center;
+    color:var(--foreground); background:var(--gray-light-05);
+    font-family:var(--font-body);
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    padding:24px 16px 48px; position:relative;
+  }
+
+  .body-large{ font-size:1.125em; line-height:1.6875em; font-weight:400; }
+  .body-medium{ font-size:1em; line-height:1.5em; font-weight:400; }
+  .body-small{ font-size:0.875em; line-height:1.3125em; font-weight:400; }
+  .body-annotation{ font-size:0.75em; line-height:1.125em; font-weight:400; }
+  .body-large-bold{ font-size:1.125em; line-height:1.6875em; font-weight:700; }
+  .body-medium-bold{ font-size:1em; line-height:1.5em; font-weight:700; }
+  .body-small-bold{ font-size:0.875em; line-height:1.3125em; font-weight:700; }
+  .body-annotation-bold{ font-size:0.75em; line-height:1.125em; font-weight:700; }
+  .cta{ font-size:1.125em; line-height:1.5em; font-weight:400; }
+
+  /* ====== DEMO LAYER ====== */
+  .route-bg{ position:absolute; inset:0; z-index:0; pointer-events:none; width:100%; height:100%; opacity:.7; }
+
+  /* switcher */
+  .switcher-bar{ position:relative; z-index:2; position:sticky; top:14px; display:flex; align-items:center; gap:14px; background:var(--white); border:1px solid var(--gray-light-10); border-radius:40px; padding:8px 10px 8px 18px; box-shadow:0 10px 28px -10px rgba(20,30,50,.18); margin-bottom:26px; }
+  .switcher-brand{ font-family:var(--font-heading); font-style:italic; font-weight:700; font-size:15px; line-height:1.1; color:var(--foreground); white-space:nowrap; }
+  .switcher-brand span{ color:var(--primary-blue); }
+  .switcher-brand small{ display:block; font-family:var(--font-body); font-style:normal; font-weight:400; font-size:9px; color:var(--gray-light-40); text-transform:uppercase; letter-spacing:.08em; margin-top:1px; }
+  .switcher{ display:flex; gap:4px; background:var(--gray-light-05); border-radius:30px; padding:4px; }
+  .switch-btn{ font-family:var(--font-body); font-size:12.5px; font-weight:600; border:none; background:none; padding:8px 16px; border-radius:24px; cursor:pointer; color:var(--gray-dark-40); }
+  .switch-btn.active{ background:var(--primary-blue); color:var(--white); }
+
+  .view{ display:none; position:relative; z-index:1; width:100%; }
+  .view.active{ display:flex; flex-direction:column; align-items:center; }
+  #view-desktop.active{ display:block; }
+
+  /* ---- MOBILE (app) ---- */
+  .stage{ position:relative; }
+  .phone{ width:min(390px, 92vw); aspect-ratio:9/19.3; background:#0a0a0a; border-radius:46px; padding:12px; box-shadow:0 30px 80px -20px rgba(20,30,50,.35), 0 0 0 1px rgba(255,255,255,.05) inset; position:relative; }
+  .screen{ width:100%; height:100%; background:var(--white); border-radius:34px; overflow:hidden; display:flex; flex-direction:column; position:relative; }
+  .notch{ position:absolute; top:0; left:50%; transform:translateX(-50%); width:34%; height:22px; background:#0a0a0a; border-radius:0 0 16px 16px; z-index:5; }
+  .statusbar{ flex-shrink:0; height:32px; display:flex; align-items:center; justify-content:space-between; padding:0 26px; color:var(--foreground); font-weight:700; font-size:12px; }
+  .statusbar .icons{ display:flex; gap:5px; align-items:center; }
+  .topbar{ flex-shrink:0; padding:4px 18px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--gray-light-10); }
+  .brand-group{ display:flex; align-items:center; gap:9px; }
+  .brand{ font-family:var(--font-heading); font-style:italic; font-weight:700; font-size:19px; color:var(--foreground); }
+  .brand span{ color:var(--primary-blue); }
+  .brand.brand-stack{ display:flex; flex-direction:column; gap:1px; }
+  .brand.brand-stack .b-top{ font-family:var(--font-body); font-style:normal; font-weight:700; font-size:8.5px; letter-spacing:.1em; color:var(--primary-blue); line-height:1; }
+  .brand.brand-stack .b-bottom{ font-family:var(--font-heading); font-style:italic; font-weight:700; font-size:13.5px; color:var(--foreground); line-height:1.15; }
+  .top-actions{ display:flex; gap:10px; }
+  .icon-btn{ width:34px; height:34px; border-radius:50%; background:var(--gray-light-05); border:1px solid var(--gray-light-10); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--foreground); }
+  .icon-btn svg{ width:16px; height:16px; }
+  .content{ flex:1; min-height:0; overflow-y:auto; padding:18px 16px 24px; }
+  .content::-webkit-scrollbar{ width:0; }
+  .page-title{ font-family:var(--font-heading); font-style:italic; font-weight:700; font-size:21px; margin:0 0 4px; color:var(--foreground); }
+  .page-sub{ color:var(--gray-dark-40); margin:0 0 16px; }
+  .bottomnav{ flex-shrink:0; height:68px; display:flex; align-items:center; justify-content:space-around; border-top:1px solid var(--gray-light-10); background:rgba(255,255,255,.85); backdrop-filter:blur(6px); padding-bottom:6px; }
+  .nav-btn{ display:flex; flex-direction:column; align-items:center; gap:4px; background:none; border:none; color:var(--gray-light-40); font-family:var(--font-body); font-size:10px; cursor:pointer; padding:4px 10px; }
+  .nav-btn svg{ width:21px; height:21px; }
+  .nav-btn.active{ color:var(--primary-blue); }
+  .nav-btn .dot{ width:4px; height:4px; border-radius:50%; background:var(--primary-blue); opacity:0; margin-top:-2px; }
+  .nav-btn.active .dot{ opacity:1; }
+  .home-indicator{ position:absolute; bottom:6px; left:50%; transform:translateX(-50%); width:120px; height:4px; border-radius:3px; background:rgba(0,0,0,.18); z-index:5; }
+  .page{ display:none; }
+  .page.active{ display:block; animation:fade .25s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+
+  .card{ background:var(--white); border:1px solid var(--gray-light-10); border-radius:var(--radius-md); padding:14px; margin-bottom:12px; }
+  .row{ display:flex; align-items:center; }
+  .avatar{ width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-heading); font-style:italic; font-weight:700; font-size:13px; flex-shrink:0; }
+  .avatar.blue{ background:var(--primary-blue); color:var(--white); }
+  .avatar.navy{ background:var(--michelin-dark-blue); color:var(--white); }
+  .avatar.yellow{ background:var(--primary-yellow); color:var(--michelin-dark-blue); }
+  .avatar.blue2{ background:var(--primary-blue-dark-02); color:var(--white); }
+  .avatar.gray{ background:var(--gray-dark-40); color:var(--white); }
+
+  .badge-official{ font-size:9.5px; letter-spacing:.06em; text-transform:uppercase; font-weight:700; padding:4px 8px; border-radius:6px; background:var(--primary-yellow); color:var(--michelin-dark-blue); white-space:nowrap; }
+  .tag{ font-size:9.5px; letter-spacing:.04em; text-transform:uppercase; font-weight:700; padding:4px 8px; border-radius:6px; background:var(--gray-light-05); border:1px solid var(--gray-light-10); color:var(--gray-dark-50); white-space:nowrap; }
+
+  .post-head{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+  .post-who{ display:flex; gap:10px; align-items:center; }
+  .post-name{ font-size:13.5px; font-weight:700; line-height:1.25; }
+  .post-meta{ font-size:11px; color:var(--gray-light-40); }
+  .post-photo{ height:120px; border-radius:var(--radius-sm); margin:10px 0; background:var(--primary-blue-light-01); position:relative; overflow:hidden; }
+  .post-photo svg{ position:absolute; opacity:.6; }
+  .post-text{ font-size:13px; color:var(--gray-dark-60); line-height:1.5; margin:8px 0; }
+  .stat-row{ display:flex; gap:14px; font-size:11.5px; color:var(--gray-dark-40); margin:8px 0; flex-wrap:wrap; }
+  .stat-row b{ color:var(--foreground); font-weight:700; }
+  .post-foot{ display:flex; align-items:center; justify-content:space-between; margin-top:10px; }
+  .foot-actions{ display:flex; gap:16px; }
+  .foot-btn{ display:flex; align-items:center; gap:5px; color:var(--gray-light-40); font-size:12px; }
+  .foot-btn svg{ width:16px; height:16px; }
+
+  .gauge{ --p:50; width:40px; height:40px; border-radius:50%; background:conic-gradient(var(--primary-blue) calc(var(--p)*1%), var(--gray-light-10) 0); display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative; }
+  .gauge::before{ content:''; position:absolute; inset:4px; background:var(--white); border-radius:50%; }
+  .gauge span{ position:relative; z-index:1; font-weight:700; font-size:10.5px; color:var(--foreground); }
+  .gauge.lg{ width:78px; height:78px; }
+  .gauge.lg::before{ inset:8px; }
+  .gauge.lg span{ font-size:17px; }
+  .gauge-block{ text-align:center; }
+  .gauge-label{ font-size:10px; color:var(--gray-light-40); margin-top:6px; text-transform:uppercase; letter-spacing:.04em; }
+
+  .chips{ display:flex; gap:8px; margin-bottom:14px; overflow-x:auto; padding-bottom:2px; }
+  .chips::-webkit-scrollbar{ height:0; }
+  .chip{ flex-shrink:0; font-size:12px; font-weight:600; padding:7px 13px; border-radius:20px; border:1px solid var(--gray-light-20); background:var(--white); color:var(--gray-dark-40); cursor:pointer; white-space:nowrap; }
+  .chip.active{ background:var(--primary-blue); color:var(--white); border-color:var(--primary-blue); }
+
+  .ev-card .ev-top{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+  .ev-title{ font-size:14.5px; font-weight:700; margin:0 0 4px; }
+  .ev-org{ font-size:11.5px; color:var(--gray-light-40); }
+  .ev-meta{ display:flex; gap:14px; margin:10px 0; font-size:12px; color:var(--gray-dark-60); }
+  .ev-meta .m{ display:flex; align-items:center; gap:5px; }
+  .ev-meta svg{ width:14px; height:14px; color:var(--gray-light-40); }
+  .ev-foot{ display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+  .stack{ display:flex; }
+  .stack .avatar{ width:24px; height:24px; font-size:9px; margin-left:-8px; border:2px solid var(--white); }
+  .stack .avatar:first-child{ margin-left:0; }
+  .stack .avatar.overflow{ background:var(--gray-light-10); color:var(--gray-dark-50); }
+  .btn{ font-weight:600; font-size:12.5px; border:none; border-radius:10px; padding:8px 14px; cursor:pointer; }
+  .btn.primary{ background:var(--primary-blue); color:var(--white); }
+  .btn.primary:active{ transform:scale(.97); }
+  .btn.ghost{ background:var(--white); border:1px solid var(--gray-light-20); color:var(--foreground); }
+  .btn.joined{ background:var(--valid-light); color:var(--valid); }
+
+  .club-card{ display:flex; gap:12px; align-items:center; cursor:pointer; }
+  .club-card .avatar{ width:48px; height:48px; font-size:15px; }
+  .club-name{ font-size:14.5px; font-weight:700; }
+  .club-meta{ font-size:11.5px; color:var(--gray-light-40); margin-top:2px; }
+  .chev{ margin-left:auto; color:var(--gray-light-30); width:16px; height:16px; }
+
+  .section-head{ display:flex; align-items:center; justify-content:space-between; margin:20px 0 10px; }
+  .section-head:first-child{ margin-top:0; }
+  .section-head h3.mini{ font-family:var(--font-heading); font-style:italic; font-size:14.5px; line-height:1.2; font-weight:700; margin:0; color:var(--foreground); }
+  .tread{ height:6px; width:100%; margin-bottom:14px; border-radius:3px; background:repeating-linear-gradient(90deg, var(--primary-yellow) 0 8px, var(--gray-light-10) 8px 16px); }
+  .tuto-card{ display:flex; gap:12px; align-items:center; }
+  .tuto-thumb{ width:54px; height:54px; border-radius:var(--radius-sm); flex-shrink:0; background:var(--primary-blue-light-01); display:flex; align-items:center; justify-content:center; color:var(--primary-blue); }
+  .tuto-title{ font-size:13px; font-weight:700; margin-bottom:3px; }
+  .tuto-meta{ font-size:11px; color:var(--gray-light-40); }
+  .review-card .gauges{ display:flex; justify-content:space-around; margin-top:12px; }
+  .review-name{ font-size:15px; font-weight:700; font-family:var(--font-heading); font-style:italic; color:var(--foreground); }
+  .review-count{ font-size:11.5px; color:var(--gray-light-40); }
+
+  .profile-head{ text-align:center; padding:10px 0 18px; }
+  .profile-head .avatar{ width:72px; height:72px; font-size:22px; margin:0 auto 10px; }
+  .profile-head h2.mini{ font-family:var(--font-heading); font-style:italic; font-size:18px; line-height:1.2; margin:0 0 3px; color:var(--foreground); }
+  .profile-head p{ font-size:12px; color:var(--gray-light-40); margin:0; }
+  .stat-grid{ display:flex; gap:10px; margin-bottom:16px; }
+  .stat-box{ flex:1; background:var(--white); border:1px solid var(--gray-light-10); border-radius:var(--radius-sm); padding:12px 8px; text-align:center; }
+  .stat-box b{ display:block; font-size:17px; font-weight:700; color:var(--primary-blue); }
+  .stat-box span{ font-size:10px; color:var(--gray-light-40); text-transform:uppercase; letter-spacing:.03em; }
+  .equip-row{ display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--gray-light-10); font-size:13px; }
+  .equip-row:last-child{ border-bottom:none; }
+  .equip-row span:first-child{ color:var(--gray-light-40); }
+  .badges-row{ display:flex; gap:10px; margin-top:6px; }
+  .badge-pill{ flex:1; text-align:center; background:var(--white); border:1px solid var(--gray-light-10); border-radius:var(--radius-sm); padding:10px 4px; font-size:10.5px; color:var(--gray-dark-40); }
+  .badge-pill b{ display:block; font-size:18px; margin-bottom:4px; }
+
+  .modal-overlay{ position:absolute; inset:0; background:rgba(13,13,13,.45); z-index:20; display:flex; align-items:flex-end; opacity:0; pointer-events:none; transition:opacity .2s; }
+  .modal-overlay.show{ opacity:1; pointer-events:auto; }
+  .modal-panel{ background:var(--white); border-radius:24px 24px 0 0; width:100%; padding:20px 18px 28px; transform:translateY(12px); transition:transform .2s; }
+  .modal-overlay.show .modal-panel{ transform:none; }
+  .modal-close{ width:32px; height:6px; background:var(--gray-light-20); border-radius:3px; margin:0 auto 16px; }
+
+  .toast{ position:absolute; bottom:84px; left:50%; transform:translateX(-50%) translateY(10px); background:var(--michelin-dark-blue); color:var(--white); font-size:12.5px; font-weight:700; padding:10px 16px; border-radius:30px; z-index:30; opacity:0; transition:.25s; white-space:nowrap; }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .caption{ position:relative; z-index:1; text-align:center; margin-top:18px; color:var(--gray-light-40); max-width:380px; }
+  .caption b{ color:var(--foreground); }
+
+  /* ---- DESKTOP (site web) ---- */
+  .browser-frame{ width:min(1120px,94vw); background:var(--gray-dark-80); border-radius:16px; padding:10px 10px 0; margin:0 auto; }
+  .browser-topbar{ display:flex; align-items:center; gap:8px; padding:2px 6px 10px; }
+  .browser-dot{ width:10px; height:10px; border-radius:50%; }
+  .browser-address{ flex:1; background:rgba(255,255,255,.1); border-radius:8px; padding:6px 14px; color:rgba(255,255,255,.55); font-size:12px; text-align:center; }
+  .browser-content{ background:var(--white); border-radius:10px 10px 0 0; height:min(720px,80vh); overflow-y:auto; position:relative; }
+
+  .dweb-nav{ position:sticky; top:0; z-index:10; background:rgba(255,255,255,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--gray-light-10); display:flex; align-items:center; justify-content:space-between; padding:16px 40px; }
+  .container{ max-width:980px; margin:0 auto; padding:0 40px; }
+  .dweb-links{ display:flex; gap:30px; align-items:center; }
+  .dweb-links a{ font-size:14px; font-weight:600; color:var(--gray-dark-60); }
+  .dweb-links a:hover{ color:var(--primary-blue); }
+  .dweb-cta{ background:var(--primary-blue); color:var(--white); border:none; border-radius:10px; padding:10px 18px; font-size:14px; font-weight:600; cursor:pointer; }
+
+  .hero-dweb{ padding:60px 40px 50px; display:grid; grid-template-columns:1.1fr .9fr; gap:50px; align-items:center; }
+  .hero-dweb .eyebrow{ color:var(--primary-blue); font-weight:700; letter-spacing:.1em; text-transform:uppercase; font-size:12px; margin-bottom:6px; }
+  .hero-dweb h1{ margin:0 0 16px; }
+  .hero-dweb p{ color:var(--gray-dark-40); max-width:440px; margin-bottom:24px; }
+  .hero-actions{ display:flex; gap:12px; }
+  .hero-art{ width:100%; }
+
+  section[id]{ scroll-margin-top:80px; }
+  .section-dweb{ padding:46px 40px; border-top:1px solid var(--gray-light-10); }
+  .section-dweb h2{ margin-bottom:6px; }
+  .section-dweb .sub{ color:var(--gray-dark-40); margin-bottom:26px; max-width:560px; }
+
+  .grid-events{ display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:16px; }
+  .grid-clubs{ display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:16px; }
+  .club-card-d{ background:var(--white); border:1px solid var(--gray-light-10); border-radius:var(--radius-md); padding:18px; }
+  .club-card-d .top{ display:flex; gap:12px; align-items:center; margin-bottom:10px; }
+  .club-card-d .avatar{ width:46px; height:46px; font-size:14px; }
+  .club-card-d p{ font-size:13px; color:var(--gray-dark-60); line-height:1.5; margin:10px 0 14px; }
+  .club-card-d .actions{ display:flex; gap:8px; }
+
+  .michelin-d{ background:var(--michelin-dark-blue); color:var(--white); }
+  .michelin-d h2,.michelin-d h3{ color:var(--white); }
+  .michelin-d .sub{ color:var(--primary-blue-light-02); }
+  .michelin-d .tread{ background:repeating-linear-gradient(90deg, var(--primary-yellow) 0 8px, rgba(255,255,255,.15) 8px 16px); margin-bottom:30px; }
+  .michelin-d h3.sub-head{ font-size:1.1em; margin:30px 0 14px; line-height:1.3; }
+  .grid-tutos-d{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+  .tuto-card-d{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:var(--radius-md); padding:14px; display:flex; gap:12px; align-items:center; }
+  .tuto-card-d .tuto-thumb{ background:rgba(255,229,0,.15); color:var(--primary-yellow); }
+  .tuto-card-d .tuto-title{ color:var(--white); }
+  .tuto-card-d .tuto-meta{ color:var(--primary-blue-light-02); }
+  .grid-reviews-d{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+  .review-card-d{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:var(--radius-md); padding:18px; }
+  .review-card-d .review-name{ color:var(--white); }
+  .review-card-d .review-count{ color:var(--primary-blue-light-02); }
+  .review-card-d .gauge.lg::before{ background:var(--michelin-dark-blue); }
+  .review-card-d .gauge.lg span{ color:var(--white); }
+  .review-card-d .gauge-label{ color:var(--primary-blue-light-02); }
+
+  .footer-d{ padding:24px 40px; text-align:center; color:var(--gray-light-40); font-size:12px; border-top:1px solid var(--gray-light-10); }
+
+  .modal-overlay-d{ position:fixed; inset:0; background:rgba(10,12,16,.55); z-index:60; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity .2s; }
+  .modal-overlay-d.show{ opacity:1; pointer-events:auto; }
+  .modal-panel-d{ background:var(--white); border-radius:20px; width:min(420px,88vw); padding:26px; position:relative; transform:scale(.96); transition:transform .2s; }
+  .modal-overlay-d.show .modal-panel-d{ transform:none; }
+  .modal-x{ position:absolute; top:16px; right:16px; width:30px; height:30px; border-radius:50%; background:var(--gray-light-05); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--gray-dark-40); }
+
+  .toast-d{ position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(10px); background:var(--michelin-dark-blue); color:var(--white); font-size:13px; font-weight:700; padding:12px 20px; border-radius:30px; z-index:70; opacity:0; transition:.25s; white-space:nowrap; }
+  .toast-d.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  @media (max-width:760px){
+    .hero-dweb{ grid-template-columns:1fr; padding:40px 24px; }
+    .dweb-nav{ padding:14px 20px; }
+    .dweb-links{ display:none; }
+    .section-dweb{ padding:34px 20px; }
+    .container{ padding:0 20px; }
+  }
+</style>
+</head>
+<body>
+
+<svg class="route-bg" viewBox="0 0 1200 1400" preserveAspectRatio="none">
+  <path d="M -50 850 C 200 850, 250 650, 480 620 S 750 500 700 350 S 1000 250 1250 280" fill="none" stroke="#27509b" stroke-width="2" stroke-dasharray="2 14" opacity=".22"/>
+  <path d="M -50 100 C 150 150, 300 50, 500 120 S 850 300 1250 200" fill="none" stroke="#fce500" stroke-width="3" stroke-dasharray="2 14" opacity=".4"/>
+</svg>
+
+<div class="switcher-bar">
+<div class="brand-group">
+  <svg width="26" height="26" viewBox="0 0 200 200"><circle cx="100" cy="100" r="72" fill="none" stroke="#27509b" stroke-width="18"/><path d="M 87.5 29.1 A 72 72 0 0 1 159 58.7" fill="none" stroke="#fce500" stroke-width="18" stroke-linecap="round"/><path d="M 70 135 C 85 120, 95 105, 100 100 C 105 95, 118 82, 132 68" fill="none" stroke="#171717" stroke-width="9" stroke-linecap="round"/><circle cx="70" cy="135" r="7" fill="#27509b"/><circle cx="132" cy="68" r="7" fill="#fce500" stroke="#171717" stroke-width="2"/></svg>
+  <div class="switcher-brand"><span>MICHELIN</span> COMMUNITY RIDE<small>Prototype démo</small></div>
+</div>
+  <div class="switcher" id="switcher">
+    <button class="switch-btn active" data-view="mobile">Application mobile</button>
+    <button class="switch-btn" data-view="desktop">Site web desktop</button>
+  </div>
+</div>
+
+<!-- ============ VUE MOBILE ============ -->
+<div class="view active" id="view-mobile">
+  <div class="stage">
+    <div class="phone">
+      <div class="screen">
+        <div class="notch"></div>
+        <div class="statusbar">
+          <span>9:41</span>
+          <div class="icons">
+            <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 7L1 9M4 5L4 9M7 3L7 9M10 1L10 9" stroke="#171717" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <svg width="18" height="10" viewBox="0 0 18 10" fill="none"><rect x="1" y="1" width="14" height="8" rx="2" stroke="#171717" stroke-width="1.2"/><rect x="2.5" y="2.5" width="9" height="5" rx="1" fill="#171717"/></svg>
+          </div>
+        </div>
+
+        <div class="topbar">
+          <div class="brand-group">
+            <svg width="22" height="22" viewBox="0 0 200 200"><circle cx="100" cy="100" r="72" fill="none" stroke="#27509b" stroke-width="18"/><path d="M 87.5 29.1 A 72 72 0 0 1 159 58.7" fill="none" stroke="#fce500" stroke-width="18" stroke-linecap="round"/><path d="M 70 135 C 85 120, 95 105, 100 100 C 105 95, 118 82, 132 68" fill="none" stroke="#171717" stroke-width="9" stroke-linecap="round"/><circle cx="70" cy="135" r="7" fill="#27509b"/><circle cx="132" cy="68" r="7" fill="#fce500" stroke="#171717" stroke-width="2"/></svg>
+            <div class="brand brand-stack"><span class="b-top">MICHELIN</span><span class="b-bottom">Community Ride</span></div>
+          </div>
+          <div class="top-actions">
+            <div class="icon-btn" onclick="toast('Pas de nouvelle notification')">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 3C9 3 7 5.5 7 9v3l-2 3.5h14L17 12V9c0-3.5-2-6-5-6Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M10 18a2 2 0 004 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </div>
+            <div class="icon-btn" onclick="toast('Réglages à venir')">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M19 12a7 7 0 00-.2-1.6l2-1.5-2-3.4-2.3.8a7 7 0 00-2.7-1.6L13.4 2h-2.8l-.4 2.7a7 7 0 00-2.7 1.6l-2.3-.8-2 3.4 2 1.5a7 7 0 000 3.2l-2 1.5 2 3.4 2.3-.8a7 7 0 002.7 1.6l.4 2.7h2.8l.4-2.7a7 7 0 002.7-1.6l2.3.8 2-3.4-2-1.5c.13-.5.2-1 .2-1.6Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="content">
+          <section class="page active" id="page-feed">
+            <div class="page-title">Fil d'actualité</div>
+            <div class="page-sub body-small">Ce que vos clubs et riders partagent</div>
+
+            <div class="card">
+              <div class="post-head">
+                <div class="post-who">
+                  <div class="avatar blue">CV</div>
+                  <div><div class="post-name">Club Cycliste du Vercors</div><div class="post-meta body-annotation">Club · il y a 2h</div></div>
+                </div>
+                <div class="gauge" style="--p:84"><span>8.4</span></div>
+              </div>
+              <div class="post-text">Boucle du Col de Rousset ce matin — asphalte mouillé sur la descente, le grip est resté incroyable en sortie de virage.</div>
+              <div class="post-photo"><svg width="100%" height="100%" viewBox="0 0 300 120"><path d="M0 90 Q 70 40 150 70 T 300 50" stroke="#27509b" stroke-width="2" fill="none" stroke-dasharray="3 8"/></svg></div>
+              <div class="stat-row"><span><b>87</b> km</span><span><b>1240</b> m D+</span><span><b>3h12</b></span></div>
+              <div class="post-foot">
+                <div class="foot-actions">
+                  <div class="foot-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.4-9.5-8.8C.8 7.6 2.6 4 6.2 4c2 0 3.4 1 4.8 2.8C12.4 5 13.8 4 15.8 4c3.6 0 5.4 3.6 3.7 7.2C17 15.6 12 20 12 20Z" stroke="currentColor" stroke-width="1.6"/></svg>132</div>
+                  <div class="foot-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M21 12c0 4.4-4 8-9 8-1.3 0-2.6-.2-3.7-.7L3 20l1.1-4C3.4 14.6 3 13.3 3 12c0-4.4 4-8 9-8s9 3.6 9 8Z" stroke="currentColor" stroke-width="1.6"/></svg>18</div>
+                </div>
+                <span class="tag">Power Road</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="post-head">
+                <div class="post-who">
+                  <div class="avatar navy">LM</div>
+                  <div><div class="post-name">Léa M.</div><div class="post-meta body-annotation">Rider · il y a 5h</div></div>
+                </div>
+                <div class="gauge" style="--p:91"><span>9.1</span></div>
+              </div>
+              <div class="post-text">Sortie nocturne, Route des Crêtes. Première fois avec les Power Road — confiance totale même sous la pluie.</div>
+              <div class="stat-row"><span><b>54</b> km</span><span><b>1h40</b></span><span><b>2°C</b> ressenti</span></div>
+              <div class="post-foot">
+                <div class="foot-actions">
+                  <div class="foot-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.4-9.5-8.8C.8 7.6 2.6 4 6.2 4c2 0 3.4 1 4.8 2.8C12.4 5 13.8 4 15.8 4c3.6 0 5.4 3.6 3.7 7.2C17 15.6 12 20 12 20Z" stroke="currentColor" stroke-width="1.6"/></svg>96</div>
+                  <div class="foot-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M21 12c0 4.4-4 8-9 8-1.3 0-2.6-.2-3.7-.7L3 20l1.1-4C3.4 14.6 3 13.3 3 12c0-4.4 4-8 9-8s9 3.6 9 8Z" stroke="currentColor" stroke-width="1.6"/></svg>7</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="post-head">
+                <div class="post-who">
+                  <div class="avatar yellow">CA</div>
+                  <div><div class="post-name">Club Cycliste Alsace</div><div class="post-meta body-annotation">Club · il y a 1j</div></div>
+                </div>
+                <span class="badge-official">Officiel Michelin</span>
+              </div>
+              <div class="post-text">Retour sur la journée test Michelin à Colmar : 230 participants, des conditions parfaites pour évaluer le grip à sec et sous arrosage.</div>
+              <div class="post-photo"><svg width="100%" height="100%" viewBox="0 0 300 120"><path d="M0 90 Q 70 40 150 70 T 300 50" stroke="#27509b" stroke-width="2" fill="none" stroke-dasharray="3 8"/></svg></div>
+              <div class="post-foot">
+                <div class="foot-actions">
+                  <div class="foot-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M12 20s-7-4.4-9.5-8.8C.8 7.6 2.6 4 6.2 4c2 0 3.4 1 4.8 2.8C12.4 5 13.8 4 15.8 4c3.6 0 5.4 3.6 3.7 7.2C17 15.6 12 20 12 20Z" stroke="currentColor" stroke-width="1.6"/></svg>410</div>
+                  <div class="foot-btn"><svg viewBox="0 0 24 24" fill="none"><path d="M21 12c0 4.4-4 8-9 8-1.3 0-2.6-.2-3.7-.7L3 20l1.1-4C3.4 14.6 3 13.3 3 12c0-4.4 4-8 9-8s9 3.6 9 8Z" stroke="currentColor" stroke-width="1.6"/></svg>52</div>
+                </div>
+                <div class="gauge" style="--p:87"><span>8.7</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="page" id="page-events">
+            <div class="page-title">Événements</div>
+            <div class="page-sub body-small">Sorties organisées par les clubs près de vous</div>
+            <div class="chips" id="chips">
+              <div class="chip active" data-cat="all">Tous</div>
+              <div class="chip" data-cat="route">Route</div>
+              <div class="chip" data-cat="vtt">VTT</div>
+              <div class="chip" data-cat="gravel">Gravel</div>
+              <div class="chip" data-cat="compet">Compétition</div>
+            </div>
+            <div id="events-list"></div>
+          </section>
+
+          <section class="page" id="page-clubs">
+            <div class="page-title">Clubs</div>
+            <div class="page-sub body-small">Rejoignez une communauté près de vous</div>
+            <div id="clubs-list"></div>
+          </section>
+
+          <section class="page" id="page-michelin">
+            <div class="page-title">Espace Michelin</div>
+            <div class="page-sub body-small">Contenus et événements officiels</div>
+            <div class="tread"></div>
+
+            <div class="section-head"><h3 class="mini">Événements officiels</h3></div>
+            <div class="card ev-card">
+              <div class="ev-top"><div><div class="ev-title">Journée test Power Gravel</div><div class="ev-org body-annotation">Michelin Bike</div></div><span class="badge-official">Officiel</span></div>
+              <div class="ev-meta"><span class="m">21 juin 2026</span><span class="m">Clermont-Ferrand</span></div>
+            </div>
+            <div class="card ev-card">
+              <div class="ev-top"><div><div class="ev-title">Rallye découverte Power Road</div><div class="ev-org body-annotation">Michelin Bike</div></div><span class="badge-official">Officiel</span></div>
+              <div class="ev-meta"><span class="m">12 juillet 2026</span><span class="m">Annecy</span></div>
+            </div>
+
+            <div class="section-head"><h3 class="mini">Tutoriels</h3></div>
+            <div class="card tuto-card" onclick="toast('Lecture de la vidéo')">
+              <div class="tuto-thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5Z" fill="currentColor"/></svg></div>
+              <div><div class="tuto-title">Bien vérifier la pression de ses pneus</div><div class="tuto-meta body-annotation">3:42 · Débutant</div></div>
+            </div>
+            <div class="card tuto-card" onclick="toast('Lecture de la vidéo')">
+              <div class="tuto-thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5Z" fill="currentColor"/></svg></div>
+              <div><div class="tuto-title">Choisir le bon pneu selon le terrain</div><div class="tuto-meta body-annotation">6:15 · Intermédiaire</div></div>
+            </div>
+            <div class="card tuto-card" onclick="toast('Lecture de la vidéo')">
+              <div class="tuto-thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5Z" fill="currentColor"/></svg></div>
+              <div><div class="tuto-title">Comprendre l'usure et le témoin TWI</div><div class="tuto-meta body-annotation">4:50 · Débutant</div></div>
+            </div>
+
+            <div class="section-head"><h3 class="mini">Avis &amp; retours pneus</h3></div>
+            <div class="card review-card">
+              <div class="review-name">Power Road</div><div class="review-count">1 204 avis riders</div>
+              <div class="gauges">
+                <div class="gauge-block"><div class="gauge lg" style="--p:90"><span>9.0</span></div><div class="gauge-label">Grip</div></div>
+                <div class="gauge-block"><div class="gauge lg" style="--p:86"><span>8.6</span></div><div class="gauge-label">Confort</div></div>
+                <div class="gauge-block"><div class="gauge lg" style="--p:78"><span>7.8</span></div><div class="gauge-label">Durabilité</div></div>
+              </div>
+            </div>
+            <div class="card review-card">
+              <div class="review-name">Power Gravel</div><div class="review-count">860 avis riders</div>
+              <div class="gauges">
+                <div class="gauge-block"><div class="gauge lg" style="--p:93"><span>9.3</span></div><div class="gauge-label">Grip</div></div>
+                <div class="gauge-block"><div class="gauge lg" style="--p:79"><span>7.9</span></div><div class="gauge-label">Confort</div></div>
+                <div class="gauge-block"><div class="gauge lg" style="--p:81"><span>8.1</span></div><div class="gauge-label">Durabilité</div></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="page" id="page-profile">
+            <div class="profile-head">
+              <div class="avatar blue" style="margin:0 auto 10px;">TK</div>
+              <h2 class="mini">Thomas K.</h2>
+              <p>Club Cycliste Alsace · membre depuis 2022</p>
+            </div>
+            <div class="stat-grid">
+              <div class="stat-box"><b>4280</b><span>km / an</span></div>
+              <div class="stat-box"><b>23</b><span>sorties</span></div>
+              <div class="stat-box"><b>12</b><span>avis</span></div>
+            </div>
+            <div class="card">
+              <div class="equip-row"><span>Vélo</span><span>Route Carbone Endurance</span></div>
+              <div class="equip-row"><span>Pneus actuels</span><span>Power Road</span></div>
+              <div class="equip-row"><span>Club</span><span>Club Cycliste Alsace</span></div>
+            </div>
+            <div class="section-head"><h3 class="mini">Badges</h3></div>
+            <div class="badges-row">
+              <div class="badge-pill"><b>🏔️</b>Grimpeur</div>
+              <div class="badge-pill"><b>🌧️</b>Pluvieux</div>
+              <div class="badge-pill"><b>🏁</b>Testeur Michelin</div>
+            </div>
+          </section>
+        </div>
+
+        <div class="bottomnav">
+          <button class="nav-btn active" data-page="feed"><svg viewBox="0 0 24 24" fill="none"><path d="M4 11.5 12 4l8 7.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9h12v-9" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>Fil<div class="dot"></div></button>
+          <button class="nav-btn" data-page="events"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M4 9.5h16M8 3v3M16 3v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Events<div class="dot"></div></button>
+          <button class="nav-btn" data-page="clubs"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="9" r="3" stroke="currentColor" stroke-width="1.7"/><path d="M3 19c0-3 2.5-5 6-5s6 2 6 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="17" cy="9" r="2.4" stroke="currentColor" stroke-width="1.5"/><path d="M15.5 14.2c2.6.3 4.5 2 4.5 4.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Clubs<div class="dot"></div></button>
+          <button class="nav-btn" data-page="michelin"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 19 6v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>Michelin<div class="dot"></div></button>
+          <button class="nav-btn" data-page="profile"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.7"/><path d="M5 20c0-3.8 3.1-6 7-6s7 2.2 7 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Profil<div class="dot"></div></button>
+        </div>
+
+        <div class="home-indicator"></div>
+        <div class="modal-overlay" id="clubModal"><div class="modal-panel"><div class="modal-close"></div><div id="modal-body"></div></div></div>
+        <div class="toast" id="toast"></div>
+      </div>
+    </div>
+  </div>
+  <div class="caption body-annotation">Prototype interactif — clique sur les onglets en bas pour naviguer.<br><b>Données de démonstration</b>, aucun backend connecté.</div>
+</div>
+
+<!-- ============ VUE DESKTOP (site web) ============ -->
+<div class="view" id="view-desktop">
+  <div class="browser-frame">
+    <div class="browser-topbar">
+      <div class="browser-dot" style="background:#ff5f57;"></div>
+      <div class="browser-dot" style="background:#febc2e;"></div>
+      <div class="browser-dot" style="background:#28c840;"></div>
+      <div class="browser-address">michelin.com/community-ride</div>
+    </div>
+    <div class="browser-content" id="browser-content">
+
+      <nav class="dweb-nav">
+        <div class="brand-group">
+          <svg width="30" height="30" viewBox="0 0 200 200"><circle cx="100" cy="100" r="72" fill="none" stroke="#27509b" stroke-width="18"/><path d="M 87.5 29.1 A 72 72 0 0 1 159 58.7" fill="none" stroke="#fce500" stroke-width="18" stroke-linecap="round"/><path d="M 70 135 C 85 120, 95 105, 100 100 C 105 95, 118 82, 132 68" fill="none" stroke="#171717" stroke-width="9" stroke-linecap="round"/><circle cx="70" cy="135" r="7" fill="#27509b"/><circle cx="132" cy="68" r="7" fill="#fce500" stroke="#171717" stroke-width="2"/></svg>
+          <div class="brand"><span>MICHELIN</span> COMMUNITY RIDE</div>
+        </div>
+        <div class="dweb-links">
+          <a href="#events-d">Événements</a>
+          <a href="#clubs-d">Clubs</a>
+          <a href="#michelin-d">Espace Michelin</a>
+        </div>
+        <button class="dweb-cta" onclick="toast('Lien de téléchargement à venir')">Télécharger l'app</button>
+      </nav>
+
+      <section class="hero-dweb container">
+        <div>
+          <div class="eyebrow">Plateforme sociale du vélo</div>
+          <h1>La communauté des cyclistes, en partenariat avec Michelin.</h1>
+          <p class="body-large">Rejoignez des clubs, partagez vos sorties et donnez votre ressenti sur les pneus que vous testez — connecté aux événements officiels Michelin.</p>
+          <div class="hero-actions">
+            <button class="dweb-cta" onclick="toast('Lien de téléchargement à venir')">Télécharger l'app</button>
+            <a href="#michelin-d" class="btn ghost" style="padding:10px 18px;font-size:14px;">Découvrir l'espace Michelin</a>
+          </div>
+        </div>
+        <svg class="hero-art" viewBox="0 0 420 320" fill="none">
+          <path d="M10 280 C 90 280, 110 200, 190 190 S 300 150 280 90 S 380 60 410 70" stroke="#27509b" stroke-width="3" stroke-dasharray="2 12" opacity=".5"/>
+          <circle cx="10" cy="280" r="7" fill="#27509b"/>
+          <circle cx="190" cy="190" r="6" fill="#fce500" stroke="#00205b" stroke-width="2"/>
+          <circle cx="410" cy="70" r="7" fill="#27509b"/>
+        </svg>
+      </section>
+
+      <section class="section-dweb container" id="events-d">
+        <h2>Événements à venir</h2>
+        <p class="sub body-large">Les sorties organisées par les clubs près de vous.</p>
+        <div class="chips" id="chips-d">
+          <div class="chip active" data-cat="all">Tous</div>
+          <div class="chip" data-cat="route">Route</div>
+          <div class="chip" data-cat="vtt">VTT</div>
+          <div class="chip" data-cat="gravel">Gravel</div>
+          <div class="chip" data-cat="compet">Compétition</div>
+        </div>
+        <div class="grid-events" id="events-grid-d"></div>
+      </section>
+
+      <section class="section-dweb container" id="clubs-d">
+        <h2>Nos clubs partenaires</h2>
+        <p class="sub body-large">Trouvez la communauté qui vous correspond et rejoignez-la.</p>
+        <div class="grid-clubs" id="clubs-grid-d"></div>
+      </section>
+
+      <section class="section-dweb michelin-d" id="michelin-d">
+        <div class="container">
+          <h2>Espace Michelin</h2>
+          <p class="sub body-large">Événements officiels, tutoriels et retours pneus de la communauté.</p>
+          <div class="tread"></div>
+
+          <h3 class="sub-head">Événements officiels</h3>
+          <div class="grid-events" id="events-michelin-d">
+            <div class="card ev-card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);">
+              <div class="ev-top"><div><div class="ev-title" style="color:#fff;">Journée test Power Gravel</div><div class="ev-org body-annotation" style="color:var(--primary-blue-light-02);">Michelin Bike</div></div><span class="badge-official">Officiel</span></div>
+              <div class="ev-meta" style="color:var(--primary-blue-light-02);"><span class="m">21 juin 2026</span><span class="m">Clermont-Ferrand</span></div>
+            </div>
+            <div class="card ev-card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);">
+              <div class="ev-top"><div><div class="ev-title" style="color:#fff;">Rallye découverte Power Road</div><div class="ev-org body-annotation" style="color:var(--primary-blue-light-02);">Michelin Bike</div></div><span class="badge-official">Officiel</span></div>
+              <div class="ev-meta" style="color:var(--primary-blue-light-02);"><span class="m">12 juillet 2026</span><span class="m">Annecy</span></div>
+            </div>
+          </div>
+
+          <h3 class="sub-head">Tutoriels</h3>
+          <div class="grid-tutos-d">
+            <div class="tuto-card-d" onclick="toastD('Lecture de la vidéo')"><div class="tuto-thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5Z" fill="currentColor"/></svg></div><div><div class="tuto-title">Bien vérifier la pression de ses pneus</div><div class="tuto-meta body-annotation">3:42 · Débutant</div></div></div>
+            <div class="tuto-card-d" onclick="toastD('Lecture de la vidéo')"><div class="tuto-thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5Z" fill="currentColor"/></svg></div><div><div class="tuto-title">Choisir le bon pneu selon le terrain</div><div class="tuto-meta body-annotation">6:15 · Intermédiaire</div></div></div>
+            <div class="tuto-card-d" onclick="toastD('Lecture de la vidéo')"><div class="tuto-thumb"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5Z" fill="currentColor"/></svg></div><div><div class="tuto-title">Comprendre l'usure et le témoin TWI</div><div class="tuto-meta body-annotation">4:50 · Débutant</div></div></div>
+          </div>
+
+          <h3 class="sub-head">Avis &amp; retours pneus</h3>
+          <div class="grid-reviews-d">
+            <div class="review-card-d">
+              <div class="review-name">Power Road</div><div class="review-count">1 204 avis riders</div>
+              <div class="gauges">
+                <div class="gauge-block"><div class="gauge lg" style="--p:90"><span>9.0</span></div><div class="gauge-label">Grip</div></div>
+                <div class="gauge-block"><div class="gauge lg" style="--p:86"><span>8.6</span></div><div class="gauge-label">Confort</div></div>
+                <div class="gauge-block"><div class="gauge lg" style="--p:78"><span>7.8</span></div><div class="gauge-label">Durabilité</div></div>
+              </div>
+            </div>
+            <div class="review-card-d">
+              <div class="review-name">Power Gravel</div><div class="review-count">860 avis riders</div>
+              <div class="gauges">
+                <div class="gauge-block"><div class="gauge lg" style="--p:93"><span>9.3</span></div><div class="gauge-label">Grip</div></div>
+                <div class="gauge-block"><div class="gauge lg" style="--p:79"><span>7.9</span></div><div class="gauge-label">Confort</div></div>
+                <div class="gauge-block"><div class="gauge lg" style="--p:81"><span>8.1</span></div><div class="gauge-label">Durabilité</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer-d">MICHELIN COMMUNITY RIDE — prototype de démonstration · aucune donnée réelle</footer>
+    </div>
+  </div>
+
+  <div class="modal-overlay-d" id="clubModalD">
+    <div class="modal-panel-d">
+      <button class="modal-x" onclick="closeModalD()">✕</button>
+      <div id="modal-body-d"></div>
+    </div>
+  </div>
+  <div class="toast-d" id="toast-d"></div>
+</div>
+
+<script>
+  // ---- Switcher ----
+  document.getElementById('switcher').addEventListener('click', (e) => {
+    const btn = e.target.closest('.switch-btn');
+    if (!btn) return;
+    document.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('view-mobile').classList.toggle('active', btn.dataset.view === 'mobile');
+    document.getElementById('view-desktop').classList.toggle('active', btn.dataset.view === 'desktop');
+  });
+
+  // ---- Mobile nav ----
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#view-mobile .page').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('page-' + btn.dataset.page).classList.add('active');
+      document.querySelector('.content').scrollTop = 0;
+    });
+  });
+
+  function toast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(window._t1); window._t1 = setTimeout(()=> t.classList.remove('show'), 1800);
+  }
+  function toastD(msg){
+    const t = document.getElementById('toast-d');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(window._t2); window._t2 = setTimeout(()=> t.classList.remove('show'), 1800);
+  }
+
+  // ---- Events (club uniquement) ----
+  const eventsData = [
+    {title:'Sortie club — Gorges du Verdon', org:'Riders du Sud', date:'5 juillet 2026', loc:'Castellane', n:23, cat:'route'},
+    {title:'Rando VTT — Forêt de Fontainebleau', org:'Club Cyclo Île-de-France', date:'28 juin 2026', loc:'Fontainebleau', n:35, cat:'vtt'},
+    {title:"Gravel découverte — Vignobles d'Alsace", org:'Club Cycliste Alsace', date:'19 juillet 2026', loc:'Colmar', n:41, cat:'gravel'},
+    {title:'Cyclosportive — Étape des Vosges', org:'Team Nightriders', date:'26 juillet 2026', loc:'Vosges', n:87, cat:'compet'},
+  ];
+
+  function buildEventCard(e, idPrefix, i){
+    const id = idPrefix + '-ev-' + i;
+    return `
+      <div class="card ev-card">
+        <div class="ev-top"><div><div class="ev-title">${e.title}</div><div class="ev-org body-annotation">${e.org}</div></div></div>
+        <div class="ev-meta">
+          <span class="m"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M4 9.5h16" stroke="currentColor" stroke-width="1.7"/></svg>${e.date}</span>
+          <span class="m"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.6 7-11.5A7 7 0 0 0 5 9.5C5 14.4 12 21 12 21Z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="9.5" r="2.2" stroke="currentColor" stroke-width="1.5"/></svg>${e.loc}</span>
+        </div>
+        <div class="ev-foot">
+          <div class="stack"><div class="avatar blue">A</div><div class="avatar gray">B</div><div class="avatar overflow">+${e.n}</div></div>
+          <button class="btn primary" id="${id}" onclick="joinEvent('${id}')">Rejoindre</button>
+        </div>
+      </div>`;
+  }
+
+  function renderEvents(cat, containerId, idPrefix){
+    const list = document.getElementById(containerId);
+    list.innerHTML = '';
+    eventsData.filter(e => cat === 'all' || e.cat === cat).forEach((e, i) => { list.innerHTML += buildEventCard(e, idPrefix, i); });
+  }
+
+  function joinEvent(id){
+    const b = document.getElementById(id);
+    b.textContent = 'Inscrit ✓'; b.classList.remove('primary'); b.classList.add('joined');
+    (id.startsWith('d-')) ? toastD('Inscription confirmée') : toast('Inscription confirmée');
+  }
+
+  document.getElementById('chips').addEventListener('click', (e) => {
+    if (!e.target.classList.contains('chip')) return;
+    document.querySelectorAll('#chips .chip').forEach(c => c.classList.remove('active'));
+    e.target.classList.add('active');
+    renderEvents(e.target.dataset.cat, 'events-list', 'm');
+  });
+  document.getElementById('chips-d').addEventListener('click', (e) => {
+    if (!e.target.classList.contains('chip')) return;
+    document.querySelectorAll('#chips-d .chip').forEach(c => c.classList.remove('active'));
+    e.target.classList.add('active');
+    renderEvents(e.target.dataset.cat, 'events-grid-d', 'd');
+  });
+  renderEvents('all', 'events-list', 'm');
+  renderEvents('all', 'events-grid-d', 'd');
+
+  // ---- Clubs ----
+  const clubsData = [
+    {id:'cv', name:'Club Cycliste du Vercors', init:'CV', cls:'blue', loc:'Vercors, Drôme', members:312, since:2014, desc:"Club de cyclistes passionnés de cols et de routes sinueuses dans le massif du Vercors.", next:"Boucle du Col de Rousset — 4 juillet"},
+    {id:'ca', name:'Club Cycliste Alsace', init:'CA', cls:'yellow', loc:'Alsace', members:540, since:2009, desc:"Le plus grand club cycliste d'Alsace, organisateur régulier de sorties gravel et de journées test Michelin.", next:"Gravel découverte — Vignobles d'Alsace — 19 juillet"},
+    {id:'rs', name:'Riders du Sud', init:'RS', cls:'gray', loc:'PACA', members:198, since:2018, desc:"Sorties conviviales à vélo dans les Gorges du Verdon et l'arrière-pays niçois.", next:"Sortie club — Gorges du Verdon — 5 juillet"},
+    {id:'tn', name:'Team Nightriders', init:'TN', cls:'blue2', loc:'Vosges', members:87, since:2021, desc:"Spécialiste des sorties gravel nocturnes et du VTT enduro dans les Vosges.", next:"Cyclosportive — Étape des Vosges — 26 juillet"},
+  ];
+
+  const clubsList = document.getElementById('clubs-list');
+  clubsData.forEach(c => {
+    clubsList.innerHTML += `
+      <div class="card club-card" onclick="openClub('${c.id}')">
+        <div class="avatar ${c.cls}">${c.init}</div>
+        <div><div class="club-name">${c.name}</div><div class="club-meta">${c.loc} · ${c.members} membres</div></div>
+        <svg class="chev" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>`;
+  });
+
+  const clubsGridD = document.getElementById('clubs-grid-d');
+  clubsData.forEach(c => {
+    clubsGridD.innerHTML += `
+      <div class="club-card-d">
+        <div class="top"><div class="avatar ${c.cls}">${c.init}</div><div><div class="club-name">${c.name}</div><div class="club-meta">${c.loc} · ${c.members} membres</div></div></div>
+        <p>${c.desc}</p>
+        <div class="actions">
+          <button class="btn ghost" onclick="openClubDesktop('${c.id}')">Voir le club</button>
+          <button class="btn primary" onclick="toastD('Demande envoyée à ${c.name}')">Rejoindre</button>
+        </div>
+      </div>`;
+  });
+
+  function openClub(id){
+    const c = clubsData.find(x => x.id === id);
+    document.getElementById('modal-body').innerHTML = `
+      <div class="row" style="gap:12px; margin-bottom:14px;">
+        <div class="avatar ${c.cls}" style="width:52px;height:52px;font-size:16px;">${c.init}</div>
+        <div><div style="font-family:var(--font-heading);font-style:italic;font-weight:700;font-size:17px;color:var(--foreground);">${c.name}</div><div class="club-meta">${c.loc} · fondé en ${c.since}</div></div>
+      </div>
+      <p style="font-size:13px;color:var(--gray-dark-60);line-height:1.5;margin:0 0 14px;">${c.desc}</p>
+      <div class="stat-row" style="margin-bottom:14px;"><span><b>${c.members}</b> membres</span><span>Prochaine sortie : <b>${c.next}</b></span></div>
+      <button class="btn primary" style="width:100%;padding:12px;" onclick="toast('Demande envoyée à ${c.name}'); closeModal();">Rejoindre le club</button>`;
+    document.getElementById('clubModal').classList.add('show');
+  }
+  function closeModal(){ document.getElementById('clubModal').classList.remove('show'); }
+  document.getElementById('clubModal').addEventListener('click', (e) => { if (e.target.id === 'clubModal') closeModal(); });
+
+  function openClubDesktop(id){
+    const c = clubsData.find(x => x.id === id);
+    document.getElementById('modal-body-d').innerHTML = `
+      <div class="row" style="gap:14px; margin-bottom:16px;">
+        <div class="avatar ${c.cls}" style="width:58px;height:58px;font-size:18px;">${c.init}</div>
+        <div><div style="font-family:var(--font-heading);font-style:italic;font-weight:700;font-size:19px;color:var(--foreground);">${c.name}</div><div class="club-meta">${c.loc} · fondé en ${c.since}</div></div>
+      </div>
+      <p style="font-size:14px;color:var(--gray-dark-60);line-height:1.6;margin:0 0 16px;">${c.desc}</p>
+      <div class="stat-row" style="margin-bottom:18px;"><span><b>${c.members}</b> membres</span><span>Prochaine sortie : <b>${c.next}</b></span></div>
+      <button class="btn primary" style="width:100%;padding:13px;" onclick="toastD('Demande envoyée à ${c.name}'); closeModalD();">Rejoindre le club</button>`;
+    document.getElementById('clubModalD').classList.add('show');
+  }
+  function closeModalD(){ document.getElementById('clubModalD').classList.remove('show'); }
+  document.getElementById('clubModalD').addEventListener('click', (e) => { if (e.target.id === 'clubModalD') closeModalD(); });
+</script>
+</body>
+</html>
