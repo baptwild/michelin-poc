@@ -194,6 +194,11 @@
   margin-right: auto;
 }
 
+.trustedSection .carouselLabel,
+.trustedSection .carouselLabelGroup {
+  text-align: left;
+}
+
 .carouselCardWide {
   flex: 0 0 calc(45% - 12px);
   aspect-ratio: 1 / 1;
